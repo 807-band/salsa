@@ -1,0 +1,121 @@
+@import "~bootstrap/scss/_functions.scss";
+@import "~bootstrap/scss/_variables.scss";
+@import "~bootstrap/scss/mixins/_breakpoints.scss";
+
+.container-fluid {
+   margin-top: 56px;
+}
+
+.site {
+   height: calc(100vh - 56px);
+}
+
+.site > div {
+   align-items: stretch;
+}
+
+.site-content {
+   background-color: #E6E6E6;
+   padding: 5vh 6vw;
+}
+
+.side-nav {
+   background-color: #C5C5C5;
+   padding: 20px;
+   padding-left: 30px;
+}
+
+.card-header {
+   background-color: #154734;
+   color: white;
+}
+
+.danger-modal-header {
+   background-color: #154734;
+   color: red;
+}
+
+.edit-button {
+   float: right;
+}
+
+.edit-station-button {
+   margin: 20px;
+}
+
+.card {
+   margin-top: 20px;
+}
+
+.required.list-group-item:after {
+   content: " *";
+   color: red;
+}
+
+// did this to get star on /evaluate/[uID]/[sID]
+// probably a better way, my css sucks
+.required:after {
+   content: " *";
+   color: red;
+}
+
+.card-item {
+   text-align: left;
+}
+
+.card-item-passed {
+   text-align: left;
+   background-color: lightgreen;
+}
+
+.card-item-failed {
+   text-align: left;
+   background-color: lightcoral;
+}
+
+.status {
+   color: grey;
+}
+
+.station-title {
+   font-size: 50px;
+}
+
+.station-jumbo {
+   background-color: #ffdf8a;
+   display: flex;
+   flex-direction: column;
+}
+
+.edit-station-data {
+   align-self: flex-end;
+}
+
+.multiline-text {
+   white-space: pre-wrap;
+}
+
+// mobile view
+@include media-breakpoint-down(xs) {
+   .side-nav {
+      display: none;
+   }
+}
+
+@include media-breakpoint-down(md) {
+   .page-nav {
+      display: none;
+   }
+}
+
+/**
+ * COLORS
+ */
+
+.mustang-green {
+   background-color: #154734;
+}
+
+.cal-poly-gold {
+   background-color: #ffdf8a;
+}
