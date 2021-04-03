@@ -4,6 +4,7 @@ import SideNav from './components/SideNav';
 import { Container, Col, Row } from 'react-bootstrap';
 import Stations from './pages/stations';
 import Station from './pages/stations/station';
+import CreateStation from './pages/stations/create';
 import { useState, useEffect } from 'react';
 
 const App = () => {
@@ -33,6 +34,9 @@ const App = () => {
               </Route>
               <Route exact path='/stations/edit'>
                 edit station order here :)
+              </Route>
+              <Route exact path='/stations/create'>
+                <CreateStation />
               </Route>
               <Route exact path='/stations/:id'>
                 <Station isAdmin={isAdmin} />
