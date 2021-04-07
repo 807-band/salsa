@@ -21,7 +21,7 @@ const EditStation = () => {
 
   const params = useParams();
   useEffect(() => {
-    // TODO: get station by id
+    // TODO: get actual station here
     const tempFakeStation = {
       sID: params.id,
       title: "station name",
@@ -32,6 +32,8 @@ const EditStation = () => {
 
   if (!state.stationData)
     return <>loading...</>;
+
+  console.log(state.redirect);
 
   return (
     <>
@@ -72,30 +74,24 @@ const EditStation = () => {
 }
 
 const GroupingCards = ({ state, setState }) => {
-  // TODO: ... why?
-  const groupings = [];
-  state.stationData.groups.forEach((groups) => {
-    groupings.push(groups);
-  });
-
-  const groupCards = groupings.map((g) =>
+  const groupCards = state.stationData.groups.map((g) =>
     <Card key={g.groupID}>
       <Card.Header className="card-header">
         <GroupingTitle state={state} setState={setState} g={g} />
       </Card.Header>
       <ListGroup>
-        <GroupList state={state} setState={setState} g={g} />
+        <GroupList state={state} setState={setState} grouping={g} />
       </ListGroup>
-      <Modal show={state.showModal == g.groupID} onHide={setState({ ...state, showModal: null })}>
+      <Modal show={state.showModal == g.groupID} onHide={() => setState({ ...state, showModal: null })}>
         <Modal.Header className="card-header"><Modal.Title>Are you sure you want to delete {g.title}?</Modal.Title></Modal.Header>
         <Modal.Body>All its items will be deleted with it.</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setState({ ...state, showModal: null })}>
             Cancel
-              </Button>
+          </Button>
           <Button variant="danger" onClick={() => deleteGrouping(state, setState, g)}>
             Yes, I'm sure
-              </Button>
+          </Button>
         </Modal.Footer>
       </Modal>
     </Card>
@@ -111,10 +107,10 @@ const GroupingTitle = ({ state, setState, g }) => {
         {g.title}
         <Button variant="danger" className="edit-button" onClick={() => setState({ ...state, showModal: g.groupID })}>
           Delete
-            </Button>
+        </Button>
         <Button className="edit-button" onClick={() => setState({ ...state, groupingTitleChange: g.groupID })}>
           Edit Title
-            </Button>
+        </Button>
       </>
     );
   else
@@ -123,10 +119,10 @@ const GroupingTitle = ({ state, setState, g }) => {
         <Form.Control type="text" defaultValue={g.title} id="title" />
         <Button variant="primary" type="submit" className="edit-button">
           Save
-            </Button>
+        </Button>
         <Button variant="secondary" className="edit-button" onClick={() => setState({ ...state, groupingTitleChange: null })}>
           Back
-            </Button>
+        </Button>
       </Form>
     );
 }
@@ -151,10 +147,10 @@ const Item = ({ state, setState, grouping, i }) => {
         {i.item}
         <Button variant="outline-danger" className="edit-button" onClick={() => deleteItem(state, setState, grouping, i)}>
           Delete
-            </Button>
-        <Button variant="outline-primary" className="edit-button" onClick={() => setState({ ...state, itemChange: i.itemID })}>
+        </Button>
+        <Button variant="outline-primary" className="edit-button" onClick={() => setState({ ...state, itemChange: i.itemID, editRequiredClicked: i.required, })}>
           Edit Item
-            </Button>
+        </Button>
       </ListGroup.Item>
     );
   else
@@ -163,15 +159,15 @@ const Item = ({ state, setState, grouping, i }) => {
         <ListGroup.Item>
           <Row>
             <Col xs={10}><Form.Control type="text" defaultValue={i.item} id="title" /></Col>
-            <Col><Form.Check label="required" onClick={() => setState({ ...state, editRequiredClicked: !state.editRequiredClicked })} /></Col>
+            <Col><Form.Check label="required" defaultChecked={i.required} onClick={() => setState({ ...state, editRequiredClicked: !state.editRequiredClicked })} /></Col>
           </Row>
         </ListGroup.Item>
         <Button variant="primary" type="submit" className="edit-button">
           Save
-            </Button>
+        </Button>
         <Button variant="secondary" className="edit-button" onClick={() => setState({ ...state, itemChange: null, editRequiredClicked: false })}>
           Back
-            </Button>
+        </Button>
       </Form>
     );
 }
@@ -179,7 +175,7 @@ const Item = ({ state, setState, grouping, i }) => {
 const AddItem = ({ state, setState, grouping }) => {
   if (state.addItemTo == null || state.addItemTo.groupID != grouping.groupID)
     return (
-      <Button variant="light" onClick={() => updateCurrentGrouping(state, setState, grouping, true)}>
+      <Button variant="light" onClick={() => setState({ ...state, requiredClicked: false, addItemTo: grouping })}>
         Add Item
       </Button>
     )
@@ -193,10 +189,10 @@ const AddItem = ({ state, setState, grouping }) => {
       </ListGroup.Item>
       <Button variant="primary" type="submit" className="edit-button">
         Add
-        </Button>
-      <Button variant="secondary" className="edit-button" onClick={() => updateCurrentGrouping(state, setState, null, false)}>
+      </Button>
+      <Button variant="secondary" className="edit-button" onClick={() => setState({ ...state, addItemTo: null, })}>
         Back
-        </Button>
+      </Button>
     </Form>
   );
 }
@@ -227,89 +223,83 @@ const AddGrouping = ({ state, setState }) => {
   );
 }
 
-
+// TODO: most of these below will need to interact with the DB in some way
 
 const onSubmitGroupingTitle = (state, setState, grouping) => async (event) => {
   event.preventDefault();
   const title = event.currentTarget.title.value;
-  // const res = await putGrouping(state.stationData.sID, grouping.groupID, title);
-  const groupings = state.stationData.groups;
-  groupings[grouping.level].title = title;
-  setState({ ...state, groupingTitleChange: null, groupings: groupings });
+  const stationData = state.stationData;
+  stationData.groups = stationData.groups.filter((g) => {
+    if(g.groupID == grouping.groupID)
+      g.title = title;
+    return g;
+  });
+  setState({ ...state, groupingTitleChange: null, stationData: stationData });
 }
 
-const deleteStation = (state, setState) => async (event) => {
-  await deleteStation(state.stationData.sID);
+const deleteStation = (state, setState) => {
   setState({ ...state, redirect: true });
 }
-
-// const clickRequiredCheckbox = () => {
-//     this.setState({ requiredClicked: !this.state.requiredClicked });
-// }
 
 const switchShowDeleteStationModal = (state, setState) => {
   setState({ ...state, showDeleteStationModal: !state.showDeleteStationModal });
 }
 
-// updateShowModal = grouping => () => {
-//     this.setState({ showModal: grouping });
-// }
-
-const updateCurrentGrouping = (state, setState, grouping, resetBox) => () => {
-  if (resetBox) setState({ ...state, requiredClicked: false });
-  setState({ ...state, addItemTo: grouping });
-}
-
-// switchAddingStateGroupings = () => {
-//     this.setState({ addingGrouping: !this.state.addingGrouping });
-// }
-
 const onSubmitGrouping = (state, setState) => async (event) => {
   event.preventDefault();
-  // await postGrouping(state.stationData.sID, event.currentTarget.title.value);
-  // const stationData = await getStationData(state.stationData.sID);
   const stationData = state.stationData;
+  stationData.groups.push({
+    groupID: Math.random()*10000,
+    title: event.currentTarget.title.value,
+    items: []
+  });
   setState({ ...state, groupings: stationData.groups });
 }
 
 const onSubmitItem = (state, setState) => async (event) => {
   event.preventDefault();
-  // await postItem(state.stationData.sID, state.addItemTo.groupID, event.currentTarget.title.value, state.requiredClicked);
-  // const stationData = await getStationData(state.stationData.sID);
   const stationData = state.stationData;
+  stationData.groups.forEach((g) => {
+    if(g.groupID == state.addItemTo.groupID) {
+      g.items.push({
+        itemID: Math.random(),
+        item: event.currentTarget.title.value,
+        required: state.requiredClicked,
+      });
+    }
+  });
   setState({ ...state, groupings: stationData.groups });
 }
 
 const onUpdateItem = (state, setState, grouping, item) => async (event) => {
   event.preventDefault();
-  const groupings = state.stationData.groups;
-  groupings[grouping.level].items[item.level].item = event.currentTarget.title.value;
-  groupings[grouping.level].items[item.level].required = state.editRequiredClicked ? 1 : 0;
-  // await putItem(state.stationData.sID, grouping.groupID, item.itemID, event.currentTarget.title.value, state.editRequiredClicked ? 1 : 0);
-  setState({ ...state, itemChange: null, editRequiredClicked: false, groupings: groupings });
+  const stationData = state.stationData;
+  stationData.groups.forEach((g) => {
+    if(g.groupID == grouping.groupID) {
+      g.items.forEach((i) => {
+        if(i.itemID == item.itemID) {
+          i.item = event.currentTarget.title.value;
+          i.required = state.editRequiredClicked ? 1 : 0;
+        }
+      });
+    }
+  });
+  setState({ ...state, itemChange: null, editRequiredClicked: false, stationData: stationData });
 }
 
-const deleteGrouping = (state, setState, grouping) => async () => {
-  // await deleteGrouping(state.stationData.sID, grouping.groupID);
-  // const stationData = await getStationData(state.stationData.sID);
+const deleteGrouping = (state, setState, grouping) => {
   const stationData = state.stationData;
+  stationData.groups = stationData.groups.filter((g) => g.groupID != grouping.groupID);
   setState({ ...state, groupings: stationData.groups, showModal: false });
 }
 
-const deleteItem = (state, setState, grouping, item) => async () => {
-  // await deleteItem(state.stationData.sID, grouping.groupID, item.itemID);
-  // const stationData = await getStationData(state.stationData.sID);
+const deleteItem = (state, setState, grouping, item) => {
   const stationData = state.stationData;
-  setState({ ...state, groupings: stationData.groups });
+  stationData.groups.forEach((g) => {
+    if(g.groupID == grouping.groupID)
+      g.items = g.items.filter((i) => i.itemID != item.itemID);
+  });
+  setState({ ...state, stationData: stationData });
 }
-
-// export async function getServerSideProps({ params }) {
-//   const stationData = await getStationData(params.id);
-//   return {
-//      props: {
-//         stationData
-//      }
-//   }
-// }
 
 export default EditStation;
