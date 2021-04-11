@@ -7,6 +7,10 @@ import Station from './pages/stations/station';
 import CreateStation from './pages/stations/create';
 import EditStation from './pages/stations/station/edit'
 import { useState, useEffect } from 'react';
+import InstructorSetup from './pages/stations/station/scripts/instructorSetup';
+import InstructorScript from './pages/stations/station/scripts/instructorScript';
+import EvaluatorSetup from './pages/stations/station/scripts/evaluatorSetup';
+import EvaluatorScript from './pages/stations/station/scripts/evaluatorScript';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -44,6 +48,18 @@ const App = () => {
               </Route>
               <Route exact path='/stations/:id/edit'>
                 <EditStation />
+              </Route>
+              <Route exact path='/stations/:id/instructor/setup'>
+                <InstructorSetup isAdmin={isAdmin} />
+              </Route>
+              <Route exact path='/stations/:id/instructor/script'>
+                <InstructorScript isAdmin={isAdmin} />
+              </Route>
+              <Route exact path='/stations/:id/evaluator/setup'>
+                <EvaluatorSetup isAdmin={isAdmin} />
+              </Route>
+              <Route exact path='/stations/:id/evaluator/script'>
+                <EvaluatorScript isAdmin={isAdmin} />
               </Route>
             </Switch>
           </Col>

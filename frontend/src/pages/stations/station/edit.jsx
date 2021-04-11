@@ -33,8 +33,6 @@ const EditStation = () => {
   if (!state.stationData)
     return <>loading...</>;
 
-  console.log(state.redirect);
-
   return (
     <>
       { state.redirect ? (<Redirect push to="/stations" />) : null}
