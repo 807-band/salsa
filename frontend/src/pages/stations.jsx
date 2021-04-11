@@ -15,6 +15,11 @@ const Stations = ({ isAdmin }) => {
       _id: 456,
       title: "an advanced station",
       level: "advanced",
+    },
+    {
+      _id: 789,
+      title: "another beginner station",
+      level: "beginner",
     }];
     setStations(tempFakeStations);
   }, []);

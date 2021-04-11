@@ -5,7 +5,8 @@ import { Container, Col, Row } from 'react-bootstrap';
 import Stations from './pages/stations';
 import Station from './pages/stations/station';
 import CreateStation from './pages/stations/create';
-import EditStation from './pages/stations/station/edit'
+import EditStation from './pages/stations/station/edit';
+import EditStations from './pages/stations/edit';
 import { useState, useEffect } from 'react';
 import InstructorSetup from './pages/stations/station/scripts/instructorSetup';
 import InstructorScript from './pages/stations/station/scripts/instructorScript';
@@ -38,7 +39,7 @@ const App = () => {
                 <Stations isAdmin={isAdmin} />
               </Route>
               <Route exact path='/stations/edit'>
-                edit station order here :)
+                <EditStations />
               </Route>
               <Route exact path='/stations/create'>
                 <CreateStation />
