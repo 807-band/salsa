@@ -14,6 +14,7 @@ import EvaluatorSetup from './pages/stations/station/scripts/evaluatorSetup';
 import EvaluatorScript from './pages/stations/station/scripts/evaluatorScript';
 import Evaluate from './pages/evaluate';
 import EvaluateUser from './pages/evaluate/evaluateUser';
+import EvaluateUserStation from './pages/evaluate/evaluateUserStation';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -71,6 +72,9 @@ const App = () => {
               </Route>
               <Route exact path='/evaluate/:uid'>
                 <EvaluateUser />
+              </Route>
+              <Route exact path='/evaluate/:uid/:sid'>
+                <EvaluateUserStation />
               </Route>
             </Switch>
           </Col>
