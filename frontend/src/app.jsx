@@ -12,6 +12,8 @@ import InstructorSetup from './pages/stations/station/scripts/instructorSetup';
 import InstructorScript from './pages/stations/station/scripts/instructorScript';
 import EvaluatorSetup from './pages/stations/station/scripts/evaluatorSetup';
 import EvaluatorScript from './pages/stations/station/scripts/evaluatorScript';
+import Evaluate from './pages/evaluate';
+import EvaluateUser from './pages/evaluate/evaluateUser';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -35,6 +37,7 @@ const App = () => {
               <Route exact path='/'>
                 <h1>Hi 807.band!</h1>
               </Route>
+
               <Route exact path='/stations'>
                 <Stations isAdmin={isAdmin} />
               </Route>
@@ -61,6 +64,13 @@ const App = () => {
               </Route>
               <Route exact path='/stations/:id/evaluator/script'>
                 <EvaluatorScript isAdmin={isAdmin} />
+              </Route>
+
+              <Route exact path='/evaluate'>
+                <Evaluate />
+              </Route>
+              <Route exact path='/evaluate/:id'>
+                <EvaluateUser />
               </Route>
             </Switch>
           </Col>
