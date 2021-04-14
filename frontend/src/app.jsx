@@ -69,7 +69,7 @@ const App = () => {
               <Route exact path='/evaluate'>
                 <Evaluate />
               </Route>
-              <Route exact path='/evaluate/:id'>
+              <Route exact path='/evaluate/:uid'>
                 <EvaluateUser />
               </Route>
             </Switch>

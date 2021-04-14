@@ -1,11 +1,10 @@
 import { ListGroup, Card } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
 import { useParams } from 'react-router'
 import { useState } from 'react'
 import { useEffect } from 'react'
 
 const EvaluateUser = () => {
-  const uID = useParams().uID;
+  const uID = useParams().uid;
   const [stationProgress, setStationProgress] = useState(null);
   const [nextStation, setNextStation] = useState(null);
   const [user, setUser] = useState(null);
@@ -61,7 +60,7 @@ const StationCards = ({ data, nextStation, uID}) => {
   const advancedStations = data.filter(station => station.class == 1);
 
   const beginnerList = beginnerStations.map((s, index) =>
-    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed == 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.ID}>
+    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed == 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
       {"Station " + (index + 1) + ": " + s.title}
       <Status station={s} nextStation={nextStation}/>
     </ListGroup.Item>
