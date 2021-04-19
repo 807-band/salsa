@@ -67,7 +67,7 @@ const StationCards = ({ data, nextStation, uID}) => {
   );
 
   const advancedList = advancedStations.map((s, index) =>
-    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed == 0 ? "card-item-failed" : "card-item"} as="button" action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
+    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed == 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
       {"Station " + (index + 1) + ": " + s.title}
       <Status station={s} nextStation={nextStation}/>
     </ListGroup.Item>
