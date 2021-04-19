@@ -15,6 +15,7 @@ import EvaluatorScript from './pages/stations/station/scripts/evaluatorScript';
 import Evaluate from './pages/evaluate';
 import EvaluateUser from './pages/evaluate/evaluateUser';
 import EvaluateUserStation from './pages/evaluate/evaluateUserStation';
+import Overview from './pages/overview';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -39,6 +40,10 @@ const App = () => {
                 <h1>Hi 807.band!</h1>
               </Route>
 
+              <Route exact path='/events'>
+                <h1>Under construction 🔨</h1>
+              </Route>
+
               <Route exact path='/stations'>
                 <Stations isAdmin={isAdmin} />
               </Route>
@@ -47,6 +52,9 @@ const App = () => {
               </Route>
               <Route exact path='/stations/create'>
                 <CreateStation />
+              </Route>
+              <Route exact path='/stations/progress'>
+                <h1>Under construction 🔨</h1>
               </Route>
               <Route exact path='/stations/:id'>
                 <Station isAdmin={isAdmin} />
@@ -76,12 +84,20 @@ const App = () => {
               <Route exact path='/evaluate/:uid/:sid'>
                 <EvaluateUserStation />
               </Route>
+
+              <Route exact path='/overview'>
+                <Overview />
+              </Route>
+
+              <Route exact path='/profile'>
+                <h1>Under construction 🔨</h1>
+              </Route>
             </Switch>
           </Col>
 
-          <Col lg={2} className="page-nav">
+          {/* <Col lg={2} className="page-nav">
             haha sidebar go brrr
-          </Col>
+          </Col> */}
         </Row>
       </Container>
     </BrowserRouter>
