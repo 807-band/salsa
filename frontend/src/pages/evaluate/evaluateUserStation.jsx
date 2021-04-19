@@ -103,7 +103,6 @@ const EvaluationForm = ({ station, switchMap, setSwitchMap, setRedirect }) => {
 
 const changeSwitch = (id, switchMap, setSwitchMap) => () => {
   const sm = switchMap;
-  console.log("changing switch")
   sm[id] = !sm[id];
   setSwitchMap(sm);
 }
