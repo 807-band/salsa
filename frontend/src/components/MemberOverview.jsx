@@ -1,4 +1,4 @@
-import { Container, Row, Col } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import styles from '../styles/modules/MemberOverview.module.scss'
 
 const MemberOverview = ({ stations, users }) => (
@@ -12,8 +12,8 @@ const StationHead = ({ stations }) => (
   <>
     <Row className={styles.stationHeaders}>
       <Col xs={3}></Col>
-      <Col className={styles.headerColor+' '+styles.cellpad}>Beginner</Col>
-      <Col className={styles.headerColor+' '+styles.cellpad}>Advanced</Col>
+      <Col className={styles.headerColor + ' ' + styles.cellpad}>Beginner</Col>
+      <Col className={styles.headerColor + ' ' + styles.cellpad}>Advanced</Col>
     </Row>
     <Row className={styles.stationHeaders}>
       <Col xs={3}></Col>
@@ -24,7 +24,7 @@ const StationHead = ({ stations }) => (
 )
 
 const StationBoxes = ({ level, stationData }) => {
-  const stations = stationData.filter(station => station.class == level);
+  const stations = stationData.filter(station => station.class === level);
   const stationTag = stations.map(station => {
     return (
       <Col title={station.title} className={styles.stationColor}>
@@ -55,12 +55,12 @@ const MemberAttempts = ({ users }) => {
 
   for (let section in sectionSorted) {
     sectionInfo.push(
-      <>
+      <div key={section}>
         <Row className={styles.sectionHead}>
           <Col className={styles.headerColor} xs={3}>{section}</Col>
         </Row>
         <Members members={sectionSorted[section]} />
-      </>
+      </div>
     )
   }
 
@@ -73,12 +73,13 @@ const Members = ({ members }) => {
   for (let name in members) {
     let member = members[name];
     tempMembers.push(
-      <Row key={member.userID}>
+      <Row key={name}>
         <Col xs={3} className={styles.nameColor}>{name}</Col>
         <Attempts attempts={member} />
       </Row>
     );
   }
+
   return <>{tempMembers}</>
 }
 
@@ -100,7 +101,9 @@ const Attempts = ({ attempts }) => {
 
     const moreInfo = "Evaluated by: " + attempt.evaluator
       + "\nEvaluated at: " + attempt.evalTime;
-    return (
+    // TODO: might want to change DB schema so that attempts have attemptIDs to maintain order,
+    // and to use as 'key' here
+      return (
       <Col className={statusClass} title={moreInfo}>
         {mark}
       </Col>

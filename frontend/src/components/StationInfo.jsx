@@ -57,13 +57,12 @@ const EditCard = ({ c, content, setContent, id }) => (
 );
 
 const addCard = (content, setContent, id) => {
-  const stationID = id;
   // relies on having at least one on the page
   const role = content[0].role;
   const info = content[0].info;
 
   // TODO: used to be this
-  // const cardInfo = await createInfoTab(stationID, role, info);
+  // const cardInfo = await createInfoTab(id, role, info);
   const cardInfo = {
     role: role,
     info: info,
@@ -78,7 +77,7 @@ const saveInfo = (content, setContent, id) => (event) => {
   const newText = event.currentTarget.text.value;
   const newContent = content;
   newContent.forEach((c) => {
-    if(c.packetID == infoID) {
+    if(c.packetID.toString() === infoID) {
       c.content = newText;
     }
   });

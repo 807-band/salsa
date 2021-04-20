@@ -56,18 +56,18 @@ const EvaluateUser = () => {
 }
 
 const StationCards = ({ data, nextStation, uID}) => {
-  const beginnerStations = data.filter(station => station.class == 0);
-  const advancedStations = data.filter(station => station.class == 1);
+  const beginnerStations = data.filter(station => station.class === 0);
+  const advancedStations = data.filter(station => station.class === 1);
 
   const beginnerList = beginnerStations.map((s, index) =>
-    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed == 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
+    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed === 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
       {"Station " + (index + 1) + ": " + s.title}
       <Status station={s} nextStation={nextStation}/>
     </ListGroup.Item>
   );
 
   const advancedList = advancedStations.map((s, index) =>
-    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed == 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
+    <ListGroup.Item className={s.passed ? "card-item-passed" : s.passed === 0 ? "card-item-failed" : "card-item"} action href={`/evaluate/${uID}/${s.sID}`} key={s.sID}>
       {"Station " + (index + 1) + ": " + s.title}
       <Status station={s} nextStation={nextStation}/>
     </ListGroup.Item>
@@ -93,7 +93,7 @@ const StationCards = ({ data, nextStation, uID}) => {
 }
 
 const Status = ({ station, nextStation }) => {
-   if(station.sID == nextStation.sID)
+   if(station.sID === nextStation.sID)
       return(
          <div className="status">Status: ready for evaluation</div>
       );

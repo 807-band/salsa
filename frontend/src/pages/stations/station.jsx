@@ -16,7 +16,32 @@ const Station = ({ isAdmin }) => {
     const tempFakeStation = {
       sID: params.id,
       title: "station name",
-      groups: [],
+      groups: [
+        {
+          groupID: 0,
+          title: 'grouping1',
+          items: [{
+            itemID: 999,
+            item: 'item1',
+          },
+          {
+            itemID: 998,
+            item: 'item2',
+          }],
+        },
+        {
+          groupID: 1,
+          title: 'grouping2',
+          items: [{
+            itemID: 997,
+            item: 'item1',
+          },
+          {
+            itemID: 996,
+            item: 'item2',
+          }],
+        }
+      ],
     };
     setStationData(tempFakeStation);
   }, [params.id]);

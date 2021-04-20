@@ -20,6 +20,7 @@ const Overview = () => {
   const tempFakeUserAttempts = [{
     userID: '0',
     sectionID: '3',
+    section: 'snare',
     name: 'Bryce Collard',
     attempts: 1,
     passed: 1,
@@ -27,6 +28,7 @@ const Overview = () => {
   {
     userID: '0',
     sectionID: '3',
+    section: 'snare',
     name: 'Bryce Collard',
     attempts: 1,
     passed: 0,
@@ -34,6 +36,7 @@ const Overview = () => {
   {
     userID: '0',
     sectionID: '3',
+    section: 'snare',
     name: 'Bryce Collard',
     attempts: 0,
     passed: 0,

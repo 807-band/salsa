@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ListGroup from 'react-bootstrap/ListGroup'
 import Card from 'react-bootstrap/Card'
-import { DragDropContext, resetServerContext } from 'react-beautiful-dnd'
+import { DragDropContext } from 'react-beautiful-dnd'
 import { Droppable } from 'react-beautiful-dnd'
 import { Draggable } from 'react-beautiful-dnd'
 import Button from 'react-bootstrap/Button'
@@ -35,8 +35,8 @@ const EditStations = () => {
       },
     ];
 
-    setBeginnerStations(allStationsData.filter(station => station.class == 0));
-    setAdvancedStations(allStationsData.filter(station => station.class == 1));
+    setBeginnerStations(allStationsData.filter(station => station.class === 0));
+    setAdvancedStations(allStationsData.filter(station => station.class === 1));
   }, []);
 
   // map beginner and advanced lists into a lists of draggables
@@ -111,7 +111,7 @@ const onDragEnd = (beginnerStations, advancedStations, setBeginnerStations, setA
   const to = result.destination.index;
 
   // droppableId 0 for beginner, 1 for advanced
-  const stationList = result.source.droppableId == 0 ? beginnerStations : advancedStations;
+  const stationList = result.source.droppableId === "0" ? beginnerStations : advancedStations;
 
   // update state to reflect order changes visually
   const newStationList = Array.from(stationList);
@@ -119,7 +119,7 @@ const onDragEnd = (beginnerStations, advancedStations, setBeginnerStations, setA
   newStationList.splice(to, 0, stationList[from]);
   for (var i = 0; i < newStationList.length; i++)
     newStationList[i].order = i;
-  if (result.source.droppableId == 0) //beginner
+  if (result.source.droppableId === "0") //beginner
     setBeginnerStations(newStationList);
   else //advanced
     setAdvancedStations(newStationList);
