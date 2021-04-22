@@ -1,8 +1,9 @@
-import Form from 'react-bootstrap/Form'
-import Button from 'react-bootstrap/Button'
-import { useState } from 'react'
+/* eslint-disable jsx-a11y/control-has-associated-label */
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import React, { useState } from 'react';
 
-const CreateStation = (props) => {
+const CreateStation = () => {
   const [validated, setValidated] = useState(false);
 
   const handleSubmit = (event) => {
@@ -11,11 +12,12 @@ const CreateStation = (props) => {
       event.preventDefault();
       event.stopPropagation();
       setValidated(true);
-    }
-    else
-      // TODO: post station to DB
-      // postStation(form.title.value, form.description.value, form.rank.value == "beginner" ? 0 : 1).then(setValidated(true));
+    } else {
+    // TODO: post station to DB
+    // postStation(form.title.value, form.description.value,
+    // form.rank.value == "beginner" ? 0 : 1).then(setValidated(true));
       setValidated(true);
+    }
   };
 
   return (
@@ -39,7 +41,7 @@ const CreateStation = (props) => {
         <Form.Group controlId="rank">
           <Form.Label>Rank</Form.Label>
           <Form.Control type="text" required as="select">
-            <option></option>
+            <option />
             <option>beginner</option>
             <option>advanced</option>
           </Form.Control>
@@ -50,7 +52,7 @@ const CreateStation = (props) => {
         </Button>
       </Form>
     </>
-  )
-}
+  );
+};
 
 export default CreateStation;

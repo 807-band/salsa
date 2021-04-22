@@ -1,6 +1,5 @@
-import { Card, ListGroup } from 'react-bootstrap'
-import { useState } from 'react'
-import { useEffect } from 'react';
+import { Card, ListGroup } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
 
 const Evaluate = () => {
   const [users, setUsers] = useState([]);
@@ -25,11 +24,11 @@ const Evaluate = () => {
     }]);
     setSections([{
       sectionID: '3',
-      name: 'snare'
+      name: 'snare',
     },
     {
       sectionID: '4',
-      name: 'trumpet'
+      name: 'trumpet',
     }]);
   }, []);
 
@@ -42,36 +41,36 @@ const Evaluate = () => {
       <SectionCards users={users} sections={sections} />
     </>
   );
-}
+};
 
 const groupByProp = (xs, prop) => {
-  var grouped = {};
-  for (var i = 0; i < xs.length; i++) {
-    var p = xs[i][prop];
+  const grouped = {};
+  for (let i = 0; i < xs.length; i += 1) {
+    const p = xs[i][prop];
     if (!grouped[p]) { grouped[p] = []; }
     grouped[p].push(xs[i]);
   }
   return grouped;
-}
+};
 
-const SectionCards = ({users, sections}) => {
+const SectionCards = ({ users, sections }) => {
   const groupedUsers = groupByProp(users, 'sectionID');
-  const sectionCards = sections.map((section, index) =>
+  const sectionCards = sections.map((section) => (
     <Card key={section.sectionID}>
       <Card.Header className="card-header">{section.name}</Card.Header>
       <ListGroup>
-        {groupedUsers[section.sectionID].map((user, index) =>
+        {groupedUsers[section.sectionID].map((user) => (
           <ListGroup.Item className="card-item" action href={`/evaluate/${user.userID}`} key={user.userID}>
             {user.name}
           </ListGroup.Item>
-        )}
+        ))}
       </ListGroup>
     </Card>
-  );
+  ));
 
   return (
     <>{sectionCards}</>
   );
-}
+};
 
 export default Evaluate;

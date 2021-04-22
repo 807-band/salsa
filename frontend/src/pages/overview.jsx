@@ -1,21 +1,22 @@
+import React from 'react';
 import MemberOverview from '../components/MemberOverview';
 
 const Overview = () => {
   // TODO: get from db
   const tempFakeStations = [{
     _id: 123,
-    title: "a beginner station",
-    level: "beginner",
+    title: 'a beginner station',
+    level: 'beginner',
   },
   {
     _id: 456,
-    title: "an advanced station",
-    level: "advanced",
+    title: 'an advanced station',
+    level: 'advanced',
   },
   {
     _id: 789,
-    title: "another beginner station",
-    level: "beginner",
+    title: 'another beginner station',
+    level: 'beginner',
   }];
   const tempFakeUserAttempts = [{
     userID: '0',
@@ -48,6 +49,6 @@ const Overview = () => {
       <MemberOverview stations={tempFakeStations} users={tempFakeUserAttempts} />
     </>
   );
-}
+};
 
 export default Overview;
