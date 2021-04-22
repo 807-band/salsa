@@ -1,0 +1,19 @@
+.parentPage {
+   font-size: 2rem;
+}
+
+.childPage {
+   font-size: 1.25rem;
+   font-weight: 200;
+   margin-bottom: 5px;
+}
+
+.parentPage, .childPage {
+   display: block;
+   color: rgba(0, 0, 0, .7);
+
+   &:hover {
+      color: rgba(0, 0, 0, 1);
+      text-decoration: none;
+   }
+}

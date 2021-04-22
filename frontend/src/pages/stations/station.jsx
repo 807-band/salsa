@@ -1,0 +1,99 @@
+import ListGroup from 'react-bootstrap/ListGroup';
+import Card from 'react-bootstrap/Card';
+import { Link, useParams } from 'react-router-dom';
+import { Button } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+
+import StationInfoLinks from '../../components/StationInfoLinks';
+import StationInfoJumbo from '../../components/StationInfoJumbo';
+
+const Station = ({ isAdmin }) => {
+  const [stationData, setStationData] = useState(null);
+  const params = useParams();
+
+  useEffect(() => {
+    // TODO: get station by id
+    const tempFakeStation = {
+      sID: params.id,
+      title: 'station name',
+      groups: [
+        {
+          groupID: 0,
+          title: 'grouping1',
+          items: [{
+            itemID: 999,
+            item: 'item1',
+          },
+          {
+            itemID: 998,
+            item: 'item2',
+          }],
+        },
+        {
+          groupID: 1,
+          title: 'grouping2',
+          items: [{
+            itemID: 997,
+            item: 'item1',
+          },
+          {
+            itemID: 996,
+            item: 'item2',
+          }],
+        },
+      ],
+    };
+    setStationData(tempFakeStation);
+  }, [params.id]);
+
+  if (!stationData) return null;
+  return (
+    <>
+      {isAdmin ? (
+        <Link to={`/stations/${stationData.sID}/edit`}>
+          <Button variant="primary" className="edit-station-button">
+            Edit
+          </Button>
+        </Link>
+      ) : null}
+
+      <StationInfoJumbo stationData={stationData} />
+      <StationInfoLinks id={stationData.sID} />
+      <GroupingCards groups={stationData.groups} />
+      <br />
+    </>
+  );
+};
+
+const GroupingCards = ({ groups }) => {
+  // I tore out some stuff here that looked pretty pointless, hopefully it still works
+  // TODO: check when we have real data
+  groups.sort((a, b) => ((a.level > b.level) ? 1 : -1));
+
+  return (
+    <>
+      {
+    groups.map((g) => (
+      <Card key={g.groupID}>
+        <Card.Header className="card-header">{g.title}</Card.Header>
+        <ListGroup>
+          <GroupList items={g.items} />
+        </ListGroup>
+      </Card>
+    ))
+  }
+    </>
+  );
+};
+
+const GroupList = ({ items }) => {
+  items.sort((a, b) => ((a.level > b.level) ? 1 : -1));
+
+  return items.map((i) => (
+    <ListGroup.Item key={i.itemID} className={i.required ? 'required' : ''}>
+      {i.item}
+    </ListGroup.Item>
+  ));
+};
+
+export default Station;
