@@ -9,7 +9,7 @@ const port = process.env.PORT || 3001;
 
 // TEMP!!! DELETE THIS!!!
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.jsonp({ message: 'Hello World!' });
 });
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
