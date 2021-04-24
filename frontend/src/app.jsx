@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Container, Col, Row } from 'react-bootstrap';
-import axios from 'axios';
 import Header from './components/Header';
 import SideNav from './components/SideNav';
 import Stations from './pages/stations';
@@ -20,15 +19,10 @@ import Overview from './pages/overview';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
-  const [message, setMessage] = useState('Not connected to backend');
 
   useEffect(() => {
     // TODO: get user info here
     setAdmin(true);
-    axios.get('http://localhost:3001')
-      .then((res) => {
-        setMessage(res.data.message);
-      });
   }, []);
 
   return (
@@ -44,7 +38,6 @@ const App = () => {
             <Switch>
               <Route exact path="/">
                 <h1>Hi 807.band!</h1>
-                <div>{message}</div>
               </Route>
 
               <Route exact path="/events">
