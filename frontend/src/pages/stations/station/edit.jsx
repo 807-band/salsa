@@ -4,45 +4,16 @@ import {
   Row, Col, Button, Form, Modal, Card,
 } from 'react-bootstrap';
 import { Link, useParams, Redirect } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StationInfo from '../../../components/StationInfoLinks';
 import StationInfoJumbo from '../../../components/StationInfoJumbo';
+import { getStationData } from '../../../lib/stations';
 
 const EditStation = () => {
   const params = useParams();
-  // TODO: get actual station here
-  const tempFakeStation = {
-    sID: params.id,
-    title: 'station name',
-    groups: [
-      {
-        groupID: 0,
-        title: 'grouping1',
-        items: [{
-          itemID: 999,
-          item: 'item1',
-        },
-        {
-          itemID: 998,
-          item: 'item2',
-        }],
-      },
-      {
-        groupID: 1,
-        title: 'grouping2',
-        items: [{
-          itemID: 997,
-          item: 'item1',
-        },
-        {
-          itemID: 996,
-          item: 'item2',
-        }],
-      },
-    ],
-  };
+
   const [state, setState] = useState({
-    stationData: tempFakeStation,
+    stationData: null,
     addingGrouping: false,
     addItemTo: null,
     showModal: null,
@@ -53,6 +24,11 @@ const EditStation = () => {
     itemChange: null,
     redirect: false,
   });
+
+  useEffect(() => {
+    getStationData(params.id)
+      .then((stationData) => setState({ ...state, stationData }));
+  }, [params.id]);
 
   if (!state.stationData) return <>loading...</>;
 
