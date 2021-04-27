@@ -7,7 +7,10 @@ import { Link, useParams, Redirect } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import StationInfo from '../../../components/StationInfoLinks';
 import StationInfoJumbo from '../../../components/StationInfoJumbo';
-import { getStationData } from '../../../lib/stations';
+import {
+  getStationData, postGrouping, deleteGrouping,
+  postItem, deleteItem,
+} from '../../../lib/stations';
 
 const EditStation = () => {
   const params = useParams();
@@ -106,7 +109,7 @@ const GroupingCards = ({ state, setState }) => {
           <Button variant="secondary" onClick={() => setState({ ...state, showModal: null })}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => deleteGrouping(state, setState, g)}>
+          <Button variant="danger" onClick={() => doDeleteGrouping(state, setState, g)}>
             Yes, I&apos;m sure
           </Button>
         </Modal.Footer>
@@ -164,7 +167,7 @@ const Item = ({
     return (
       <ListGroup.Item key={i.itemID} className={i.required ? 'required' : ''}>
         {i.item}
-        <Button variant="outline-danger" className="edit-button" onClick={() => deleteItem(state, setState, grouping, i)}>
+        <Button variant="outline-danger" className="edit-button" onClick={() => doDeleteItem(state, setState, grouping, i)}>
           Delete
         </Button>
         <Button variant="outline-primary" className="edit-button" onClick={() => setState({ ...state, itemChange: i.itemID, editRequiredClicked: i.required })}>
@@ -244,8 +247,6 @@ const AddGrouping = ({ state, setState }) => {
   );
 };
 
-// TODO: most of these below will need to interact with the DB in some way
-
 const onSubmitGroupingTitle = (state, setState, grouping) => async (event) => {
   event.preventDefault();
   const title = event.currentTarget.title.value;
@@ -268,27 +269,18 @@ const switchShowDeleteStationModal = (state, setState) => {
 const onSubmitGrouping = (state, setState) => async (event) => {
   event.preventDefault();
   const { stationData } = state;
-  stationData.groups.push({
-    groupID: Math.random() * 10000,
-    title: event.currentTarget.title.value,
-    items: [],
-  });
-  setState({ ...state, groupings: stationData.groups });
+  await postGrouping(stationData.sID, event.currentTarget.title.value);
+  await getStationData(stationData.sID)
+    .then((s) => setState({ ...state, stationData: s }));
 };
 
 const onSubmitItem = (state, setState) => async (event) => {
   event.preventDefault();
   const { stationData } = state;
-  stationData.groups.forEach((g) => {
-    if (g.groupID === state.addItemTo.groupID) {
-      g.items.push({
-        itemID: Math.random(),
-        item: event.currentTarget.title.value,
-        required: state.requiredClicked,
-      });
-    }
-  });
-  setState({ ...state, groupings: stationData.groups });
+  await postItem(stationData.sID, state.addItemTo.groupID,
+    event.currentTarget.title.value, state.requiredClicked);
+  await getStationData(stationData.sID)
+    .then((s) => setState({ ...state, stationData: s }));
 };
 
 const onUpdateItem = (state, setState, grouping, item) => async (event) => {
@@ -309,18 +301,20 @@ const onUpdateItem = (state, setState, grouping, item) => async (event) => {
   });
 };
 
-const deleteGrouping = (state, setState, grouping) => {
+const doDeleteGrouping = (state, setState, grouping) => {
   const { stationData } = state;
   stationData.groups = stationData.groups.filter((g) => g.groupID !== grouping.groupID);
   setState({ ...state, groupings: stationData.groups, showModal: false });
+  deleteGrouping(stationData.sID, grouping.groupID);
 };
 
-const deleteItem = (state, setState, grouping, item) => {
+const doDeleteItem = (state, setState, grouping, item) => {
   const { stationData } = state;
   stationData.groups.forEach((g) => {
     if (g.groupID === grouping.groupID) g.items = g.items.filter((i) => i.itemID !== item.itemID);
   });
   setState({ ...state, stationData });
+  deleteItem(stationData.sID, grouping.groupID, item.itemID);
 };
 
 export default EditStation;
