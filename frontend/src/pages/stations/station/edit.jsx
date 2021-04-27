@@ -44,7 +44,7 @@ const EditStation = () => {
           Done
         </Button>
       </Link>
-      <StationInfoJumbo stationData={state.stationData} edit="true" />
+      <StationInfoJumbo stationData={state.stationData} editMode="true" />
       <StationInfo id={state.stationData.id} />
       <GroupingCards state={state} setState={setState} />
 
