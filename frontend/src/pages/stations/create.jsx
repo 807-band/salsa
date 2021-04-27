@@ -2,20 +2,19 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import React, { useState } from 'react';
+import { postStation } from '../../lib/stations';
 
 const CreateStation = () => {
   const [validated, setValidated] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
       setValidated(true);
     } else {
-    // TODO: post station to DB
-    // postStation(form.title.value, form.description.value,
-    // form.rank.value == "beginner" ? 0 : 1).then(setValidated(true));
+      await postStation(form.title.value, form.description.value, form.rank.value === 'beginner' ? 0 : 1);
       setValidated(true);
     }
   };
