@@ -8,7 +8,7 @@ import React, { useEffect, useState } from 'react';
 import StationInfo from '../../../components/StationInfoLinks';
 import StationInfoJumbo from '../../../components/StationInfoJumbo';
 import {
-  getStationData,
+  getStationData, deleteStation,
   postGrouping, putGrouping, deleteGrouping,
   postItem, putItem, deleteItem,
 } from '../../../lib/stations';
@@ -76,7 +76,7 @@ const EditStation = () => {
           <Button onClick={() => switchShowDeleteStationModal(state, setState)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => deleteStation(state, setState)}>
+          <Button variant="danger" onClick={() => doDeleteStation(state, setState)}>
             Yes, I&apos;m sure
           </Button>
         </Modal.Footer>
@@ -260,7 +260,8 @@ const onSubmitGroupingTitle = (state, setState, grouping) => async (event) => {
   putGrouping(stationData.sID, grouping.groupID, title);
 };
 
-const deleteStation = (state, setState) => {
+const doDeleteStation = async (state, setState) => {
+  await deleteStation(state.stationData.sID);
   setState({ ...state, redirect: true });
 };
 
