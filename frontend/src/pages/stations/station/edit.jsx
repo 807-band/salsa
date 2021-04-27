@@ -8,8 +8,9 @@ import React, { useEffect, useState } from 'react';
 import StationInfo from '../../../components/StationInfoLinks';
 import StationInfoJumbo from '../../../components/StationInfoJumbo';
 import {
-  getStationData, postGrouping, deleteGrouping,
-  postItem, deleteItem,
+  getStationData,
+  postGrouping, putGrouping, deleteGrouping,
+  postItem, putItem, deleteItem,
 } from '../../../lib/stations';
 
 const EditStation = () => {
@@ -256,6 +257,7 @@ const onSubmitGroupingTitle = (state, setState, grouping) => async (event) => {
     return g;
   });
   setState({ ...state, groupingTitleChange: null, stationData });
+  putGrouping(stationData.sID, grouping.groupID, title);
 };
 
 const deleteStation = (state, setState) => {
@@ -296,6 +298,8 @@ const onUpdateItem = (state, setState, grouping, item) => async (event) => {
       });
     }
   });
+  await putItem(stationData.sID, grouping.groupID, item.itemID,
+    event.currentTarget.title.value, state.editRequiredClicked ? 1 : 0);
   setState({
     ...state, itemChange: null, editRequiredClicked: false, stationData,
   });
