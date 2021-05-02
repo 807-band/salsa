@@ -95,3 +95,14 @@ export async function getInformation(id) {
   const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/station/${id}/info`);
   return res.data;
 }
+
+export async function createInfoTab(id, role, info) {
+  const res = await axios.post(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/station/${id}/info/${role}/${info}`);
+  return res.data;
+}
+
+export async function putInformation(sid, iid, text) {
+  await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/station/${sid}/info/${iid}`, {
+    text,
+  });
+}
