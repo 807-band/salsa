@@ -42,3 +42,17 @@ module.exports.getById = async (req, res) => {
   station.groups = groups;
   res.jsonp(station);
 };
+
+/**
+ * Info selectors
+ */
+
+module.exports.getInformation = async (req, res) => {
+  db.execute(
+    'SELECT * FROM StationPacket WHERE stationID=? ORDER BY level', [req.params.id],
+    (err, results) => {
+      if (err) console.log(err);
+      res.jsonp(results);
+    },
+  );
+};

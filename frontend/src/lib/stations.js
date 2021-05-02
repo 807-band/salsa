@@ -86,3 +86,12 @@ export async function putItem(sid, gid, iid, title, isRequired) {
 export async function deleteItem(sid, gid, iid) {
   await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/station/${sid}/${gid}/${iid}`);
 }
+
+/**
+ * info operations
+ */
+
+export async function getInformation(id) {
+  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/station/${id}/info`);
+  return res.data;
+}
