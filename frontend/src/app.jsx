@@ -19,9 +19,9 @@ import Evaluate from './pages/evaluate';
 import EvaluateUser from './pages/evaluate/evaluateUser';
 import EvaluateUserStation from './pages/evaluate/evaluateUserStation';
 import Overview from './pages/overview';
+import Profile from './pages/profile';
 
-import SignInButton from './components/SignInButton';
-import SignOutButton from './components/SignOutButton';
+import SignInPage from './SignInPage';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -102,8 +102,7 @@ const App = () => {
                   </Route>
 
                   <Route exact path="/profile">
-                    <h1>Under construction 🔨</h1>
-                    <SignOutButton />
+                    <Profile user={accounts[0]} />
                   </Route>
                 </Switch>
               </Col>
@@ -117,7 +116,7 @@ const App = () => {
       </AuthenticatedTemplate>
 
       <UnauthenticatedTemplate>
-        <SignInButton />
+        <SignInPage />
       </UnauthenticatedTemplate>
     </>
   );
