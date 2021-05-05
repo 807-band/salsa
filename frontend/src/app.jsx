@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import { Container, Col, Row } from 'react-bootstrap';
+import {
+  AuthenticatedTemplate, UnauthenticatedTemplate, useMsal,
+} from '@azure/msal-react';
 import Header from './components/Header';
 import SideNav from './components/SideNav';
 import Stations from './pages/stations';
@@ -17,8 +20,15 @@ import EvaluateUser from './pages/evaluate/evaluateUser';
 import EvaluateUserStation from './pages/evaluate/evaluateUserStation';
 import Overview from './pages/overview';
 
+import SignInButton from './components/SignInButton';
+import SignOutButton from './components/SignOutButton';
+
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
+  const { instance, accounts } = useMsal();
+
+  console.log(instance);
+  console.log(accounts);
 
   useEffect(() => {
     // TODO: get user info here
@@ -26,81 +36,90 @@ const App = () => {
   }, []);
 
   return (
-    <BrowserRouter>
-      <Header />
-      <Container fluid>
-        <Row className="site">
-          <Col sm={4} md={3} xl={2} className="side-nav">
-            <SideNav />
-          </Col>
+    <>
+      <AuthenticatedTemplate>
+        <BrowserRouter>
+          <Header />
+          <Container fluid>
+            <Row className="site">
+              <Col sm={4} md={3} xl={2} className="side-nav">
+                <SideNav />
+              </Col>
 
-          <Col className="site-content">
-            <Switch>
-              <Route exact path="/">
-                <h1>Hi 807.band!</h1>
-              </Route>
+              <Col className="site-content">
+                <Switch>
+                  <Route exact path="/">
+                    <h1>hi 807.band!</h1>
+                  </Route>
 
-              <Route exact path="/events">
-                <h1>Under construction 🔨</h1>
-              </Route>
+                  <Route exact path="/events">
+                    <h1>Under construction 🔨</h1>
+                  </Route>
 
-              <Route exact path="/stations">
-                <Stations isAdmin={isAdmin} />
-              </Route>
-              <Route exact path="/stations/edit">
-                <EditStations />
-              </Route>
-              <Route exact path="/stations/create">
-                <CreateStation />
-              </Route>
-              <Route exact path="/stations/progress">
-                <h1>Under construction 🔨</h1>
-              </Route>
-              <Route exact path="/stations/:id">
-                <Station isAdmin={isAdmin} />
-              </Route>
-              <Route exact path="/stations/:id/edit">
-                <EditStation />
-              </Route>
-              <Route exact path="/stations/:id/instructor/setup">
-                <InstructorSetup isAdmin={isAdmin} />
-              </Route>
-              <Route exact path="/stations/:id/instructor/script">
-                <InstructorScript isAdmin={isAdmin} />
-              </Route>
-              <Route exact path="/stations/:id/evaluator/setup">
-                <EvaluatorSetup isAdmin={isAdmin} />
-              </Route>
-              <Route exact path="/stations/:id/evaluator/script">
-                <EvaluatorScript isAdmin={isAdmin} />
-              </Route>
+                  <Route exact path="/stations">
+                    <Stations isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/stations/edit">
+                    <EditStations />
+                  </Route>
+                  <Route exact path="/stations/create">
+                    <CreateStation />
+                  </Route>
+                  <Route exact path="/stations/progress">
+                    <h1>Under construction 🔨</h1>
+                  </Route>
+                  <Route exact path="/stations/:id">
+                    <Station isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/stations/:id/edit">
+                    <EditStation />
+                  </Route>
+                  <Route exact path="/stations/:id/instructor/setup">
+                    <InstructorSetup isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/stations/:id/instructor/script">
+                    <InstructorScript isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/stations/:id/evaluator/setup">
+                    <EvaluatorSetup isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/stations/:id/evaluator/script">
+                    <EvaluatorScript isAdmin={isAdmin} />
+                  </Route>
 
-              <Route exact path="/evaluate">
-                <Evaluate />
-              </Route>
-              <Route exact path="/evaluate/:uid">
-                <EvaluateUser />
-              </Route>
-              <Route exact path="/evaluate/:uid/:sid">
-                <EvaluateUserStation />
-              </Route>
+                  <Route exact path="/evaluate">
+                    <Evaluate />
+                  </Route>
+                  <Route exact path="/evaluate/:uid">
+                    <EvaluateUser />
+                  </Route>
+                  <Route exact path="/evaluate/:uid/:sid">
+                    <EvaluateUserStation />
+                  </Route>
 
-              <Route exact path="/overview">
-                <Overview />
-              </Route>
+                  <Route exact path="/overview">
+                    <Overview />
+                  </Route>
 
-              <Route exact path="/profile">
-                <h1>Under construction 🔨</h1>
-              </Route>
-            </Switch>
-          </Col>
+                  <Route exact path="/profile">
+                    <h1>Under construction 🔨</h1>
+                    <SignOutButton />
+                  </Route>
+                </Switch>
+              </Col>
 
-          {/* <Col lg={2} className="page-nav">
-            haha sidebar go brrr
-          </Col> */}
-        </Row>
-      </Container>
-    </BrowserRouter>
+              {/* <Col lg={2} className="page-nav">
+                haha sidebar go brrr
+              </Col> */}
+            </Row>
+          </Container>
+        </BrowserRouter>
+      </AuthenticatedTemplate>
+
+      <UnauthenticatedTemplate>
+        <SignInButton />
+      </UnauthenticatedTemplate>
+    </>
   );
 };
 
