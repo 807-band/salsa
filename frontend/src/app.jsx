@@ -20,20 +20,26 @@ import EvaluateUser from './pages/evaluate/evaluateUser';
 import EvaluateUserStation from './pages/evaluate/evaluateUserStation';
 import Overview from './pages/overview';
 import Profile from './pages/profile';
+import { getUserByUsername } from './lib/users';
 
 import SignInPage from './SignInPage';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
-  const { instance, accounts } = useMsal();
+  const { accounts } = useMsal();
+  const [user, setUser] = useState(null);
 
-  console.log(instance);
-  console.log(accounts);
+  console.log(user);
 
   useEffect(() => {
-    // TODO: get user info here
+    if (accounts[0]) {
+      // get username from email address
+      getUserByUsername(accounts[0].username.split('@')[0]).then((res) => {
+        setUser(res);
+      });
+    }
     setAdmin(true);
-  }, []);
+  }, [accounts[0]]);
 
   return (
     <>
