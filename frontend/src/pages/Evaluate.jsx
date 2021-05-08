@@ -39,7 +39,7 @@ const groupByProp = (xs, prop) => {
 
 const SectionCards = ({ users, sections }) => {
   const groupedUsers = groupByProp(users, 'sectionID');
-  const sectionCards = sections.map((section) => (
+  return sections.map((section) => (
     <Card key={section.sectionID}>
       <Card.Header className="card-header">{section.name}</Card.Header>
       <ListGroup>
@@ -51,10 +51,6 @@ const SectionCards = ({ users, sections }) => {
       </ListGroup>
     </Card>
   ));
-
-  return (
-    <>{sectionCards}</>
-  );
 };
 
 export default Evaluate;
