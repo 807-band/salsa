@@ -1,35 +1,19 @@
 import { Card, ListGroup } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
+import { getUsers } from '../lib/users';
+import getSections from '../lib/sections';
 
 const Evaluate = () => {
   const [users, setUsers] = useState([]);
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    // TODO: get users and sections from db
-    setUsers([{
-      userID: '0',
-      sectionID: '3',
-      name: 'Bryce Collard',
-    },
-    {
-      userID: '1',
-      sectionID: '4',
-      name: 'Ethan Zimbelman',
-    },
-    {
-      userID: '2',
-      sectionID: '3',
-      name: 'Andy Sazima',
-    }]);
-    setSections([{
-      sectionID: '3',
-      name: 'snare',
-    },
-    {
-      sectionID: '4',
-      name: 'trumpet',
-    }]);
+    getUsers().then((res) => {
+      setUsers(res);
+    });
+    getSections().then((res) => {
+      setSections(res);
+    });
   }, []);
 
   return (
