@@ -39,6 +39,7 @@ const groupByProp = (xs, prop) => {
 
 const SectionCards = ({ users, sections }) => {
   const groupedUsers = groupByProp(users, 'sectionID');
+  if (groupedUsers.length === 0) return null;
   return sections.map((section) => (
     <Card key={section.sectionID}>
       <Card.Header className="card-header">{section.name}</Card.Header>
