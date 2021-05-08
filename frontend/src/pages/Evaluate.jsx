@@ -39,12 +39,11 @@ const groupByProp = (xs, prop) => {
 
 const SectionCards = ({ users, sections }) => {
   const groupedUsers = groupByProp(users, 'sectionID');
-  if (groupedUsers.length === 0) return null;
   return sections.map((section) => (
     <Card key={section.sectionID}>
       <Card.Header className="card-header">{section.name}</Card.Header>
       <ListGroup>
-        {groupedUsers[section.sectionID].map((user) => (
+        {groupedUsers[section.sectionID] && groupedUsers[section.sectionID].map((user) => (
           <ListGroup.Item className="card-item" action href={`/evaluate/${user.userID}`} key={user.userID}>
             {user.name}
           </ListGroup.Item>

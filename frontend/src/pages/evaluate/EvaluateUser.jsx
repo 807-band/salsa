@@ -2,6 +2,8 @@
 import { ListGroup, Card } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import React, { useState, useEffect } from 'react';
+import { getUserProgress, getUserNextStation } from '../../lib/evaluations';
+import { getUser } from '../../lib/users';
 
 const EvaluateUser = () => {
   const uID = useParams().uid;
@@ -10,36 +12,9 @@ const EvaluateUser = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    // TODO: get from db
-    setStationProgress([{
-      sID: 0,
-      title: 'a passed station',
-      class: 0,
-      passed: 1,
-    },
-    {
-      sID: 1,
-      title: 'a station to do',
-      class: 0,
-      passed: 0,
-    },
-    {
-      sID: 2,
-      title: 'an advanced station',
-      class: 1,
-      passed: 0,
-    }]);
-    setNextStation({
-      sID: 1,
-      title: 'a station to do',
-      class: 0,
-      passed: 0,
-      level: 1,
-    });
-    setUser({
-      userID: uID,
-      name: 'fake user',
-    });
+    getUserProgress(uID).then((res) => setStationProgress(res));
+    getUserNextStation(uID).then((res) => setNextStation(res));
+    getUser(uID).then((res) => setUser(res));
   }, [uID]);
 
   if (!stationProgress || !nextStation || !user) return 'loading. . .';
