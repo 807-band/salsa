@@ -43,6 +43,8 @@ const Overview = () => {
     passed: 0,
   }];
 
+  console.log('OVERVIEWWWWW');
+
   return (
     <>
       <h1>Station Attempts Overview</h1>

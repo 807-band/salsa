@@ -4,7 +4,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
 import '../styles/modules/Header.module.css';
 
-const Header = () => (
+const Header = ({ isEval }) => (
   <Navbar className="header mustang-green" variant="dark" expand="sm" fixed="top">
     <Navbar.Brand href="/">807.band</Navbar.Brand>
     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
@@ -19,12 +19,17 @@ const Header = () => (
         <Link to="/stations" className="nav-link">
           Stations
         </Link>
-        <Link to="/evaluate" className="nav-link">
-          Evaluate
-        </Link>
-        <Link to="/overview" className="nav-link">
-          Overview
-        </Link>
+        {isEval
+          && (
+            <>
+              <Link to="/evaluate" className="nav-link">
+                Evaluate
+              </Link>
+              <Link to="/overview" className="nav-link">
+                Overview
+              </Link>
+            </>
+          )}
       </Nav>
       <Nav className="ml-auto">
         <Link to="/profile" className="nav-link">

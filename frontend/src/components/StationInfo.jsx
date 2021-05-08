@@ -3,22 +3,27 @@ import { Card, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { createInfoTab, putInformation } from '../lib/stations';
 
-const StationInfo = ({ id, pageData }) => {
+const StationInfo = ({ id, pageData, isAdmin }) => {
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(pageData);
 
   if (!editing) {
     return (
       <>
-        <Button className="edit-button" onClick={() => setEditing(true)}>
-          Edit
-        </Button>
-        <Link to={`/stations/${id}`}>
-          <Button variant="secondary" className="edit-button">
-            Back
+        {isAdmin
+        && (
+        <>
+          <Button className="edit-button" onClick={() => setEditing(true)}>
+            Edit
           </Button>
-        </Link>
-        <br />
+          <Link to={`/stations/${id}`}>
+            <Button variant="secondary" className="edit-button">
+              Back
+            </Button>
+          </Link>
+          <br />
+        </>
+        )}
         {content.map((c) => (
           <Card key={c.packetID}>
             <Card.Header className="card-header" />

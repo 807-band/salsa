@@ -42,3 +42,20 @@ module.exports.getByUsername = async (req, res) => {
     },
   );
 };
+
+/**
+ * Permission selectors
+ */
+module.exports.getPermissions = async (req, res) => {
+  db.execute('SELECT permission FROM Permissions '
+    + 'WHERE userID=?',
+  [req.params.id],
+  (err, results) => {
+    if (err) console.log(err);
+    const permissions = [];
+    Object.keys(results).forEach((p) => {
+      permissions.push(results[p].permission);
+    });
+    res.jsonp(permissions);
+  });
+};

@@ -10,5 +10,6 @@ const users = require('../controllers/users');
 router.get('/', users.selector.getAll);
 router.get('/:id', users.selector.getById);
 router.get('/byname/:username', users.selector.getByUsername);
+router.get('/:id/permissions', users.selector.getPermissions);
 
 module.exports = router;
