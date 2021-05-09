@@ -28,13 +28,13 @@ const App = () => {
   const [isAdmin, setAdmin] = useState(false);
   const [isEval, setEval] = useState(false);
   const { accounts } = useMsal();
-  // const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);
 
   useEffect(async () => {
     if (accounts[0]) {
       // get username from email address
       getUserByUsername(accounts[0].username.split('@')[0]).then((res) => {
-        // setUser(res);
+        setUser(res);
         getPermissions(res.userID).then((perms) => {
           setAdmin(perms.includes('admin'));
           setEval(perms.includes('admin') || perms.includes('eval'));
@@ -104,7 +104,7 @@ const App = () => {
                     {isEval && <EvaluateUser />}
                   </Route>
                   <Route exact path="/evaluate/:uid/:sid">
-                    {isEval && <EvaluateUserStation />}
+                    {isEval && <EvaluateUserStation evaluator={user} />}
                   </Route>
 
                   <Route exact path="/overview">

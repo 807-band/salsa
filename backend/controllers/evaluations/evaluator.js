@@ -4,11 +4,11 @@ async function isPassed(itemMap, maxFailed) {
   const promisePool = db.promise();
   let numFailed = 0;
   let passed = true;
-  Object.keys(itemMap).forEach((key) => {
+  Object.keys(itemMap).forEach(async (key) => {
     if (!itemMap[key]) {
       numFailed += 1;
       if (numFailed > maxFailed) passed = false;
-      const dStat = promisePool.query('SELECT required FROM StationItem WHERE itemID=?',
+      const dStat = await promisePool.query('SELECT required FROM StationItem WHERE itemID=?',
         [key]);
       if (dStat[0][0].required) passed = false;
     }
