@@ -15,5 +15,6 @@ router.get('/u/:userid/next', evaluations.user.next);
  */
 
 router.post('/:userid/:stationid', evaluations.evaluator.submit);
+router.get('/admin', evaluations.admin.all);
 
 module.exports = router;

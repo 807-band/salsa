@@ -89,10 +89,9 @@ const Attempts = ({ attempts }) => {
 
     const moreInfo = `Evaluated by: ${attempt.evaluator
     }\nEvaluated at: ${attempt.evalTime}`;
-    // TODO: might want to change DB schema so that attempts have attemptIDs to maintain order,
-    // and to use as 'key' here
+
     return (
-      <Col className={statusClass} title={moreInfo}>
+      <Col className={statusClass} title={moreInfo} key={`${attempt.name}, sID ${attempt.sID}`}>
         {mark}
       </Col>
     );

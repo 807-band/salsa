@@ -1,54 +1,21 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import MemberOverview from '../components/MemberOverview';
+import { getStations } from '../lib/stations';
+import getAttempts from '../lib/evals';
 
 const Overview = () => {
-  // TODO: get from db
-  const tempFakeStations = [{
-    _id: 123,
-    title: 'a beginner station',
-    level: 'beginner',
-  },
-  {
-    _id: 456,
-    title: 'an advanced station',
-    level: 'advanced',
-  },
-  {
-    _id: 789,
-    title: 'another beginner station',
-    level: 'beginner',
-  }];
-  const tempFakeUserAttempts = [{
-    userID: '0',
-    sectionID: '3',
-    section: 'snare',
-    name: 'Bryce Collard',
-    attempts: 1,
-    passed: 1,
-  },
-  {
-    userID: '0',
-    sectionID: '3',
-    section: 'snare',
-    name: 'Bryce Collard',
-    attempts: 1,
-    passed: 0,
-  },
-  {
-    userID: '0',
-    sectionID: '3',
-    section: 'snare',
-    name: 'Bryce Collard',
-    attempts: 0,
-    passed: 0,
-  }];
+  const [stations, setStations] = useState(null);
+  const [attempts, setAttempts] = useState([]);
 
-  console.log('OVERVIEWWWWW');
+  useEffect(() => {
+    getStations().then((s) => setStations(s));
+    getAttempts().then((a) => setAttempts(a));
+  }, []);
 
-  return (
+  return stations && (
     <>
       <h1>Station Attempts Overview</h1>
-      <MemberOverview stations={tempFakeStations} users={tempFakeUserAttempts} />
+      <MemberOverview stations={stations} users={attempts} />
     </>
   );
 };
