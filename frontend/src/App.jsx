@@ -20,6 +20,7 @@ import EvaluateUser from './pages/evaluate/EvaluateUser';
 import EvaluateUserStation from './pages/evaluate/EvaluateUserStation';
 import Overview from './pages/Overview';
 import Profile from './pages/Profile';
+import Events from './pages/Events';
 import { getUserByUsername, getPermissions } from './lib/users';
 
 import SignInPage from './SignInPage';
@@ -61,7 +62,10 @@ const App = () => {
                   </Route>
 
                   <Route exact path="/events">
-                    <h1>Under construction 🔨</h1>
+                    <Events />
+                  </Route>
+                  <Route exact path="/events/create">
+                    {isAdmin && <h1>u are an admin and u can create an event :)</h1>}
                   </Route>
 
                   <Route exact path="/stations">
