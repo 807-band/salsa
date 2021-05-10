@@ -3,10 +3,12 @@ import {
 } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import React, { useState, useEffect } from 'react';
-
 import { Redirect } from 'react-router-dom';
+import { getUser } from '../../lib/users';
+import { getStationData } from '../../lib/stations';
+import { submitEvaluation } from '../../lib/evaluations';
 
-const EvaluateUserStation = () => {
+const EvaluateUserStation = ({ evaluator }) => {
   const uID = useParams().uid;
   const sID = useParams().sid;
   const [user, setUser] = useState(null);
@@ -15,42 +17,8 @@ const EvaluateUserStation = () => {
   const [redirect, setRedirect] = useState(false);
 
   useEffect(() => {
-    setUser({
-      userID: uID,
-      name: 'fake user',
-    });
-    setStation({
-      sID: 1,
-      title: 'a station to do',
-      class: 0,
-      passed: 0,
-      groups: [
-        {
-          groupID: 0,
-          title: 'grouping1',
-          items: [{
-            itemID: 999,
-            item: 'item1',
-          },
-          {
-            itemID: 998,
-            item: 'item2',
-          }],
-        },
-        {
-          groupID: 1,
-          title: 'grouping2',
-          items: [{
-            itemID: 997,
-            item: 'item1',
-          },
-          {
-            itemID: 996,
-            item: 'item2',
-          }],
-        },
-      ],
-    });
+    getUser(uID).then((res) => setUser(res));
+    getStationData(sID).then((res) => setStation(res));
   }, [uID, sID]);
 
   useEffect(() => {
@@ -77,15 +45,18 @@ const EvaluateUserStation = () => {
         switchMap={switchMap}
         setSwitchMap={setSwitchMap}
         setRedirect={setRedirect}
+        uID={uID}
+        sID={sID}
+        evalID={evaluator.userID}
       />
     </>
   );
 };
 
 const EvaluationForm = ({
-  station, switchMap, setSwitchMap, setRedirect,
+  station, switchMap, setSwitchMap, setRedirect, uID, sID, evalID,
 }) => (
-  <Form onSubmit={onSubmitEvaluation(setRedirect, switchMap)}>
+  <Form onSubmit={onSubmitEvaluation(uID, sID, evalID, switchMap, station.maxFailed, setRedirect)}>
     {station.groups.map((group) => (
       <Card key={group.groupID}>
         <Card.Header>{group.title}</Card.Header>
@@ -113,14 +84,11 @@ const changeSwitch = (id, switchMap, setSwitchMap) => () => {
   setSwitchMap(sm);
 };
 
-const onSubmitEvaluation = (setRedirect) => (event) => {
+const onSubmitEvaluation = (
+  uID, sID, evalID, switchMap, maxFailed, setRedirect,
+) => async (event) => {
   event.preventDefault();
-  // TODO: once we have user auth, the second userID will be the evaluatorID
-  // for now, the user evaluates themselves ;)
-
-  // TODO: push to db
-  // await submitEvaluation(this.props.user.userID, this.props.station.sID,
-  // this.props.currentUser.userID, this.state.switchMap, this.props.station.maxFailed);
+  await submitEvaluation(uID, sID, evalID, switchMap, maxFailed);
   setRedirect(true);
 };
 

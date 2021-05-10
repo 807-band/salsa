@@ -4,39 +4,19 @@ import { Link } from 'react-router-dom';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-
 import Button from 'react-bootstrap/Button';
 import Handle from '../../components/Handle';
+import { getStations, updateOrder } from '../../lib/stations';
 
 const EditStations = () => {
   const [beginnerStations, setBeginnerStations] = useState([]);
   const [advancedStations, setAdvancedStations] = useState([]);
 
   useEffect(() => {
-    // TODO: get actual stations here
-    const allStationsData = [
-      {
-        sID: 0,
-        title: 'a beginner station',
-        class: 0,
-        groups: [],
-      },
-      {
-        sID: 1,
-        title: 'an advanced station',
-        class: 1,
-        groups: [],
-      },
-      {
-        sID: 2,
-        title: 'another beginner station',
-        class: 0,
-        groups: [],
-      },
-    ];
-
-    setBeginnerStations(allStationsData.filter((station) => station.class === 0));
-    setAdvancedStations(allStationsData.filter((station) => station.class === 1));
+    getStations().then((allStationsData) => {
+      setBeginnerStations(allStationsData.filter((station) => station.class === 0));
+      setAdvancedStations(allStationsData.filter((station) => station.class === 1));
+    });
   }, []);
 
   // map beginner and advanced lists into a lists of draggables
@@ -124,7 +104,7 @@ const EditStations = () => {
 // called after a draggable is dropped
 const onDragEnd = (
   beginnerStations, advancedStations, setBeginnerStations, setAdvancedStations,
-) => (result) => {
+) => async (result) => {
   if (result.destination == null) return;
   const from = result.source.index;
   const to = result.destination.index;
@@ -143,8 +123,7 @@ const onDragEnd = (
     setAdvancedStations(newStationList);
   }
 
-  // TODO: update order in DB
-  // await updateOrder(result.draggableId, result.destination.index);
+  await updateOrder(result.draggableId, result.destination.index);
 };
 
 export default EditStations;

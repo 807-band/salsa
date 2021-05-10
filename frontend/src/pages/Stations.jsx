@@ -1,27 +1,12 @@
 import { Card, Button, ListGroup } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
+import { getStations } from '../lib/stations';
 
 const Stations = ({ isAdmin }) => {
   const [stations, setStations] = useState([]);
 
   useEffect(() => {
-    // TODO: get stations from DB here
-    const tempFakeStations = [{
-      _id: 123,
-      title: 'a beginner station',
-      level: 'beginner',
-    },
-    {
-      _id: 456,
-      title: 'an advanced station',
-      level: 'advanced',
-    },
-    {
-      _id: 789,
-      title: 'another beginner station',
-      level: 'beginner',
-    }];
-    setStations(tempFakeStations);
+    getStations().then((s) => setStations(s));
   }, []);
 
   return (
@@ -41,17 +26,17 @@ const Stations = ({ isAdmin }) => {
 };
 
 const StationCards = ({ stations }) => {
-  const beginnerStations = stations.filter((station) => station.level === 'beginner');
-  const advancedStations = stations.filter((station) => station.level === 'advanced');
+  const beginnerStations = stations.filter((station) => station.class === 0);
+  const advancedStations = stations.filter((station) => station.class === 1);
 
   const beginnerList = beginnerStations.map((s, index) => (
-    <ListGroup.Item key={s._id} className="card-item" action href={`/stations/${s._id}`}>
+    <ListGroup.Item key={s.sID} className="card-item" action href={`/stations/${s.sID}`}>
       {`Station ${index + 1}: ${s.title}`}
     </ListGroup.Item>
   ));
 
   const advancedList = advancedStations.map((s, index) => (
-    <ListGroup.Item key={s._id} className="card-item" action href={`/stations/${s._id}`}>
+    <ListGroup.Item key={s.sID} className="card-item" action href={`/stations/${s.sID}`}>
       {`Station ${index + 1}: ${s.title}`}
     </ListGroup.Item>
   ));

@@ -1,23 +1,29 @@
 import React, { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { createInfoTab, putInformation } from '../lib/stations';
 
-const StationInfo = ({ id, pageData }) => {
+const StationInfo = ({ id, pageData, isAdmin }) => {
   const [editing, setEditing] = useState(false);
   const [content, setContent] = useState(pageData);
 
   if (!editing) {
     return (
       <>
-        <Button className="edit-button" onClick={() => setEditing(true)}>
-          Edit
-        </Button>
-        <Link to={`/stations/${id}`}>
-          <Button variant="secondary" className="edit-button">
-            Back
+        {isAdmin
+        && (
+        <>
+          <Button className="edit-button" onClick={() => setEditing(true)}>
+            Edit
           </Button>
-        </Link>
-        <br />
+          <Link to={`/stations/${id}`}>
+            <Button variant="secondary" className="edit-button">
+              Back
+            </Button>
+          </Link>
+          <br />
+        </>
+        )}
         {content.map((c) => (
           <Card key={c.packetID}>
             <Card.Header className="card-header" />
@@ -59,22 +65,16 @@ const EditCard = ({
   </Form>
 );
 
-const addCard = (content, setContent) => {
+const addCard = async (content, setContent, id) => {
   // relies on having at least one on the page
   const { role } = content[0];
   const { info } = content[0];
 
-  // TODO: used to be this
-  // const cardInfo = await createInfoTab(id, role, info);
-  const cardInfo = {
-    role,
-    info,
-    packetID: Math.random(),
-  };
+  const cardInfo = await createInfoTab(id, role, info);
   setContent([...content, cardInfo]);
 };
 
-const saveInfo = (content, setContent) => (event) => {
+const saveInfo = (content, setContent, id) => (event) => {
   event.preventDefault();
   const infoID = event.target.getAttribute('info-key');
   const newText = event.currentTarget.text.value;
@@ -86,6 +86,7 @@ const saveInfo = (content, setContent) => (event) => {
     }
   });
   setContent(newContent);
+  putInformation(id, infoID, newText);
 };
 
 export default StationInfo;

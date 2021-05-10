@@ -3,6 +3,7 @@ import Card from 'react-bootstrap/Card';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
+import { getStationData } from '../../lib/stations';
 
 import StationInfoLinks from '../../components/StationInfoLinks';
 import StationInfoJumbo from '../../components/StationInfoJumbo';
@@ -12,38 +13,7 @@ const Station = ({ isAdmin }) => {
   const params = useParams();
 
   useEffect(() => {
-    // TODO: get station by id
-    const tempFakeStation = {
-      sID: params.id,
-      title: 'station name',
-      groups: [
-        {
-          groupID: 0,
-          title: 'grouping1',
-          items: [{
-            itemID: 999,
-            item: 'item1',
-          },
-          {
-            itemID: 998,
-            item: 'item2',
-          }],
-        },
-        {
-          groupID: 1,
-          title: 'grouping2',
-          items: [{
-            itemID: 997,
-            item: 'item1',
-          },
-          {
-            itemID: 996,
-            item: 'item2',
-          }],
-        },
-      ],
-    };
-    setStationData(tempFakeStation);
+    getStationData(params.id).then((s) => setStationData(s));
   }, [params.id]);
 
   if (!stationData) return null;

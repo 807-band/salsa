@@ -4,45 +4,20 @@ import {
   Row, Col, Button, Form, Modal, Card,
 } from 'react-bootstrap';
 import { Link, useParams, Redirect } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import StationInfo from '../../../components/StationInfoLinks';
 import StationInfoJumbo from '../../../components/StationInfoJumbo';
+import {
+  getStationData, deleteStation,
+  postGrouping, putGrouping, deleteGrouping,
+  postItem, putItem, deleteItem,
+} from '../../../lib/stations';
 
 const EditStation = () => {
   const params = useParams();
-  // TODO: get actual station here
-  const tempFakeStation = {
-    sID: params.id,
-    title: 'station name',
-    groups: [
-      {
-        groupID: 0,
-        title: 'grouping1',
-        items: [{
-          itemID: 999,
-          item: 'item1',
-        },
-        {
-          itemID: 998,
-          item: 'item2',
-        }],
-      },
-      {
-        groupID: 1,
-        title: 'grouping2',
-        items: [{
-          itemID: 997,
-          item: 'item1',
-        },
-        {
-          itemID: 996,
-          item: 'item2',
-        }],
-      },
-    ],
-  };
+
   const [state, setState] = useState({
-    stationData: tempFakeStation,
+    stationData: null,
     addingGrouping: false,
     addItemTo: null,
     showModal: null,
@@ -54,6 +29,11 @@ const EditStation = () => {
     redirect: false,
   });
 
+  useEffect(() => {
+    getStationData(params.id)
+      .then((stationData) => setState({ ...state, stationData }));
+  }, [params.id]);
+
   if (!state.stationData) return <>loading...</>;
 
   return (
@@ -64,7 +44,7 @@ const EditStation = () => {
           Done
         </Button>
       </Link>
-      <StationInfoJumbo stationData={state.stationData} edit="true" />
+      <StationInfoJumbo stationData={state.stationData} editMode="true" />
       <StationInfo id={state.stationData.id} />
       <GroupingCards state={state} setState={setState} />
 
@@ -96,7 +76,7 @@ const EditStation = () => {
           <Button onClick={() => switchShowDeleteStationModal(state, setState)}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => deleteStation(state, setState)}>
+          <Button variant="danger" onClick={() => doDeleteStation(state, setState)}>
             Yes, I&apos;m sure
           </Button>
         </Modal.Footer>
@@ -130,7 +110,7 @@ const GroupingCards = ({ state, setState }) => {
           <Button variant="secondary" onClick={() => setState({ ...state, showModal: null })}>
             Cancel
           </Button>
-          <Button variant="danger" onClick={() => deleteGrouping(state, setState, g)}>
+          <Button variant="danger" onClick={() => doDeleteGrouping(state, setState, g)}>
             Yes, I&apos;m sure
           </Button>
         </Modal.Footer>
@@ -188,7 +168,7 @@ const Item = ({
     return (
       <ListGroup.Item key={i.itemID} className={i.required ? 'required' : ''}>
         {i.item}
-        <Button variant="outline-danger" className="edit-button" onClick={() => deleteItem(state, setState, grouping, i)}>
+        <Button variant="outline-danger" className="edit-button" onClick={() => doDeleteItem(state, setState, grouping, i)}>
           Delete
         </Button>
         <Button variant="outline-primary" className="edit-button" onClick={() => setState({ ...state, itemChange: i.itemID, editRequiredClicked: i.required })}>
@@ -268,8 +248,6 @@ const AddGrouping = ({ state, setState }) => {
   );
 };
 
-// TODO: most of these below will need to interact with the DB in some way
-
 const onSubmitGroupingTitle = (state, setState, grouping) => async (event) => {
   event.preventDefault();
   const title = event.currentTarget.title.value;
@@ -279,9 +257,11 @@ const onSubmitGroupingTitle = (state, setState, grouping) => async (event) => {
     return g;
   });
   setState({ ...state, groupingTitleChange: null, stationData });
+  putGrouping(stationData.sID, grouping.groupID, title);
 };
 
-const deleteStation = (state, setState) => {
+const doDeleteStation = async (state, setState) => {
+  await deleteStation(state.stationData.sID);
   setState({ ...state, redirect: true });
 };
 
@@ -292,27 +272,18 @@ const switchShowDeleteStationModal = (state, setState) => {
 const onSubmitGrouping = (state, setState) => async (event) => {
   event.preventDefault();
   const { stationData } = state;
-  stationData.groups.push({
-    groupID: Math.random() * 10000,
-    title: event.currentTarget.title.value,
-    items: [],
-  });
-  setState({ ...state, groupings: stationData.groups });
+  await postGrouping(stationData.sID, event.currentTarget.title.value);
+  await getStationData(stationData.sID)
+    .then((s) => setState({ ...state, stationData: s }));
 };
 
 const onSubmitItem = (state, setState) => async (event) => {
   event.preventDefault();
   const { stationData } = state;
-  stationData.groups.forEach((g) => {
-    if (g.groupID === state.addItemTo.groupID) {
-      g.items.push({
-        itemID: Math.random(),
-        item: event.currentTarget.title.value,
-        required: state.requiredClicked,
-      });
-    }
-  });
-  setState({ ...state, groupings: stationData.groups });
+  await postItem(stationData.sID, state.addItemTo.groupID,
+    event.currentTarget.title.value, state.requiredClicked);
+  await getStationData(stationData.sID)
+    .then((s) => setState({ ...state, stationData: s }));
 };
 
 const onUpdateItem = (state, setState, grouping, item) => async (event) => {
@@ -328,23 +299,27 @@ const onUpdateItem = (state, setState, grouping, item) => async (event) => {
       });
     }
   });
+  await putItem(stationData.sID, grouping.groupID, item.itemID,
+    event.currentTarget.title.value, state.editRequiredClicked ? 1 : 0);
   setState({
     ...state, itemChange: null, editRequiredClicked: false, stationData,
   });
 };
 
-const deleteGrouping = (state, setState, grouping) => {
+const doDeleteGrouping = (state, setState, grouping) => {
   const { stationData } = state;
   stationData.groups = stationData.groups.filter((g) => g.groupID !== grouping.groupID);
   setState({ ...state, groupings: stationData.groups, showModal: false });
+  deleteGrouping(stationData.sID, grouping.groupID);
 };
 
-const deleteItem = (state, setState, grouping, item) => {
+const doDeleteItem = (state, setState, grouping, item) => {
   const { stationData } = state;
   stationData.groups.forEach((g) => {
     if (g.groupID === grouping.groupID) g.items = g.items.filter((i) => i.itemID !== item.itemID);
   });
   setState({ ...state, stationData });
+  deleteItem(stationData.sID, grouping.groupID, item.itemID);
 };
 
 export default EditStation;

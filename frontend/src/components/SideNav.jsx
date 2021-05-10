@@ -1,45 +1,44 @@
-/* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../styles/modules/SideNav.module.scss';
 
-// TODO: write as function if this is gonna be used
-// otherwise, delete it
-class SideNav extends React.Component {
-  render() {
-    return (
-      <>
-        <Link to="/" className={styles.parentPage}>
-          Home
-        </Link>
-        <Link to="/events" className={styles.parentPage}>
-          Events
-        </Link>
-        <Link to="/stations" className={styles.parentPage}>
-          Stations
-        </Link>
-        <Link to="/stations/create" className={styles.parentPage}>
-          Create Station
-        </Link>
-        <Link to="/stations" className={styles.childPage}>
-          View Stations
-        </Link>
-        <Link to="/stations/progress" className={styles.childPage}>
-          Station Progress
-        </Link>
-        <Link to="/evaluate" className={styles.childPage}>
-          Evaluate
-        </Link>
-        <Link to="/overview" className={styles.childPage}>
-          Overview
-        </Link>
-        <Link to="/profile" className={styles.parentPage}>
-          Profile
-        </Link>
-      </>
-
-    );
-  }
-}
+const SideNav = ({ isAdmin, isEval }) => (
+  <>
+    <Link to="/" className={styles.parentPage}>
+      Home
+    </Link>
+    <Link to="/events" className={styles.parentPage}>
+      Events
+    </Link>
+    <Link to="/stations" className={styles.parentPage}>
+      Stations
+    </Link>
+    <Link to="/stations/progress" className={styles.childPage}>
+      Station Progress
+    </Link>
+    {isEval
+      && (
+        <>
+          <Link to="/evaluate" className={styles.childPage}>
+            Evaluate
+          </Link>
+          <Link to="/overview" className={styles.childPage}>
+            Overview
+          </Link>
+        </>
+      )}
+    {isAdmin
+      && (
+        <>
+          <Link to="/stations/create" className={styles.parentPage}>
+            Create Station
+          </Link>
+        </>
+      )}
+    <Link to="/profile" className={styles.parentPage}>
+      Profile
+    </Link>
+  </>
+);
 
 export default SideNav;

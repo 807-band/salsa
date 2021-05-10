@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Jumbotron, Form } from 'react-bootstrap';
+import { putStation } from '../lib/stations';
 
 const StationInfoJumbo = ({ editMode, stationData }) => {
   const [station, setStation] = useState(stationData);
@@ -29,7 +30,8 @@ const StationInfo = ({ editMode, station, setStation }) => {
     newStation.title = event.currentTarget.title.value;
     newStation.description = event.currentTarget.description.value;
     newStation.maxFailed = event.currentTarget.maxFailed.value;
-    // TODO: save newStation to DB here
+    await putStation(station.sID, event.currentTarget.title.value,
+      event.currentTarget.description.value, event.currentTarget.maxFailed.value);
     setEditing(false);
     setStation(newStation);
   };
