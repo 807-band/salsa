@@ -4,6 +4,12 @@ const events = require('../controllers/events');
 const router = express.Router();
 
 /**
+ * admin operations
+ */
+
+router.post('/', events.admin.create);
+
+/**
  * selectors
  */
 

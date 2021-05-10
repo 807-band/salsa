@@ -21,6 +21,7 @@ import EvaluateUserStation from './pages/evaluate/EvaluateUserStation';
 import Overview from './pages/Overview';
 import Profile from './pages/Profile';
 import Events from './pages/Events';
+import CreateEvent from './pages/events/Create';
 import { getUserByUsername, getPermissions } from './lib/users';
 
 import SignInPage from './SignInPage';
@@ -65,7 +66,7 @@ const App = () => {
                     <Events />
                   </Route>
                   <Route exact path="/events/create">
-                    {isAdmin && <h1>u are an admin and u can create an event :)</h1>}
+                    {isAdmin && <CreateEvent />}
                   </Route>
 
                   <Route exact path="/stations">

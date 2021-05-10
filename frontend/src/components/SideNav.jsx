@@ -35,7 +35,7 @@ const SideNav = ({ isAdmin, isEval }) => (
       )}
     {isAdmin
       && (
-        <Link to="/stations/create" className={styles.parentPage}>
+        <Link to="/stations/create" className={styles.childPage}>
           Create Station
         </Link>
       )}
