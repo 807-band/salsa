@@ -14,5 +14,6 @@ router.post('/', events.admin.create);
  */
 
 router.get('/', events.selector.getAll);
+router.get('/:id', events.selector.getById);
 
 module.exports = router;

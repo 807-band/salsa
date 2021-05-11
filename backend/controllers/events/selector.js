@@ -13,3 +13,12 @@ module.exports.getAll = async (req, res) => {
     },
   );
 };
+
+module.exports.getById = async (req, res) => {
+  db.execute('SELECT * FROM Events WHERE eventID=?',
+    [req.params.id],
+    (err, results) => {
+      if (err) console.log(err);
+      res.jsonp(results[0]);
+    });
+};
