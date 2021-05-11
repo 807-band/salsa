@@ -26,6 +26,7 @@ import { getUserByUsername, getPermissions } from './lib/users';
 
 import SignInPage from './SignInPage';
 import Event from './pages/events/Event';
+import EditEvent from './pages/events/event/Edit';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -71,6 +72,9 @@ const App = () => {
                   </Route>
                   <Route exact path="/events/:id">
                     <Event isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/events/:id/edit">
+                    {isAdmin && <EditEvent />}
                   </Route>
 
                   <Route exact path="/stations">
