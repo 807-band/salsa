@@ -71,6 +71,9 @@ const EditEvent = () => {
           Done
         </Button>
       </Form>
+      <Button variant="secondary" className="edit-button" onClick={() => setRedirect(`/events/${event.eventID}`)}>
+        Back
+      </Button>
     </>
   );
 };
