@@ -11,6 +11,17 @@ export async function postEvent(title, startTime) {
   });
 }
 
+export async function putEvent(id, title, startTime) {
+  await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`, {
+    title,
+    startTime,
+  });
+}
+
+export async function deleteEvent(id) {
+  await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
+}
+
 /**
  * selectors
  */

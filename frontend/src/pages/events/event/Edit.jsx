@@ -1,7 +1,7 @@
 import { Button, Form, Modal } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router';
-import { getEvent } from '../../../lib/events';
+import { deleteEvent, getEvent, putEvent } from '../../../lib/events';
 
 const EditEvent = () => {
   const [event, setEvent] = useState(null);
@@ -16,15 +16,12 @@ const EditEvent = () => {
 
   const handleSubmit = async (e) => {
     const form = e.currentTarget;
-    if (form.checkValidity() === false) {
-      e.preventDefault();
-      e.stopPropagation();
-      setValidated(true);
-    } else {
-      // TODO: putEvent
-      // const startTimeString = `${form.startDate.value} ${form.startTime.value}.00`;
-      // await putEvent(form.title.value, startTimeString);
-      setValidated(true);
+    e.preventDefault();
+    e.stopPropagation();
+    setValidated(true);
+    if (form.checkValidity()) {
+      const startTimeString = `${form.startDate.value} ${form.startTime.value}.00`;
+      await putEvent(event.eventID, form.title.value, startTimeString);
       setRedirect(`/events/${event.eventID}`);
     }
   };
@@ -78,9 +75,8 @@ const EditEvent = () => {
   );
 };
 
-const doDeleteEvent = (event, setRedirect) => {
-  console.log(event);
-  // TODO: delete event
+const doDeleteEvent = async (event, setRedirect) => {
+  await deleteEvent(event.eventID);
   setRedirect('/events');
 };
 
