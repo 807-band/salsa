@@ -13,7 +13,8 @@ const CreateEvent = () => {
       setValidated(true);
     } else {
       const startTimeString = `${form.startDate.value} ${form.startTime.value}.00`;
-      await postEvent(form.title.value, startTimeString);
+      const tardyTimeString = form.tardyTime.value ? `${form.startDate.value} ${form.tardyTime.value}.00` : null;
+      await postEvent(form.title.value, startTimeString, tardyTimeString);
       setValidated(true);
     }
   };
@@ -39,6 +40,15 @@ const CreateEvent = () => {
         <Form.Group controlId="startTime">
           <Form.Label>Start Time</Form.Label>
           <Form.Control type="time" required />
+        </Form.Group>
+
+        <Form.Group controlId="tardyTime">
+          <Form.Label>Tardy Time</Form.Label>
+          <Form.Text>
+            Starting at this time, member will be considered tardy
+            (defaults to 10 minutes after start time)
+          </Form.Text>
+          <Form.Control type="time" />
         </Form.Group>
 
         <Button variant="primary" type="submit">

@@ -4,17 +4,19 @@ import axios from 'axios';
  * admin operations
  */
 
-export async function postEvent(title, startTime) {
+export async function postEvent(title, startTime, tardyTime) {
   await axios.post(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event`, {
     title,
     startTime,
+    tardyTime,
   });
 }
 
-export async function putEvent(id, title, startTime) {
+export async function putEvent(id, title, startTime, tardyTime) {
   await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`, {
     title,
     startTime,
+    tardyTime,
   });
 }
 

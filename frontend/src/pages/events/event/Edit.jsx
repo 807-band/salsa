@@ -21,7 +21,8 @@ const EditEvent = () => {
     setValidated(true);
     if (form.checkValidity()) {
       const startTimeString = `${form.startDate.value} ${form.startTime.value}.00`;
-      await putEvent(event.eventID, form.title.value, startTimeString);
+      const tardyTimeString = form.tardyTime.value ? `${form.startDate.value} ${form.tardyTime.value}.00` : 'DEFAULT';
+      await putEvent(event.eventID, form.title.value, startTimeString, tardyTimeString);
       setRedirect(`/events/${event.eventID}`);
     }
   };
@@ -65,6 +66,15 @@ const EditEvent = () => {
         <Form.Group controlId="startTime">
           <Form.Label>Start Time</Form.Label>
           <Form.Control type="time" required />
+        </Form.Group>
+
+        <Form.Group controlId="tardyTime">
+          <Form.Label>Tardy Time</Form.Label>
+          <Form.Text>
+            Starting at this time, member will be considered tardy
+            (defaults to 10 minutes after start time)
+          </Form.Text>
+          <Form.Control type="time" />
         </Form.Group>
 
         <Button variant="primary" type="submit" className="edit-button">

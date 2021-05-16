@@ -1,12 +1,21 @@
 const db = require('../../config/db');
 
 module.exports.create = async (req, res) => {
-  db.execute('INSERT INTO Events (title, startTime) VALUES (?, ?)',
-    [req.body.title, req.body.startTime],
-    (err, results) => {
-      req.body.eventID = results.insertId;
-      res.jsonp(req.body);
-    });
+  if (req.body.tardyTime) {
+    db.execute('INSERT INTO Events (title, startTime, tardyTime) VALUES (?, ?, ?)',
+      [req.body.title, req.body.startTime, req.body.tardyTime],
+      (err, results) => {
+        req.body.eventID = results.insertId;
+        res.jsonp(req.body);
+      });
+  } else {
+    db.execute('INSERT INTO Events (title, startTime) VALUES (?, ?)',
+      [req.body.title, req.body.startTime],
+      (err, results) => {
+        req.body.eventID = results.insertId;
+        res.jsonp(req.body);
+      });
+  }
 };
 
 module.exports.updateEvent = async (req, res) => {
@@ -14,7 +23,11 @@ module.exports.updateEvent = async (req, res) => {
   let updates = '';
 
   Object.keys(req.body).forEach((key) => {
-    updates += `${key}='${req.body[key]}', `;
+    if (req.body[key] === 'DEFAULT') {
+      updates += `${key}=DEFAULT, `;
+    } else {
+      updates += `${key}='${req.body[key]}', `;
+    }
   });
   updates = updates.slice(0, -2);
 

@@ -24,7 +24,11 @@ const Event = ({ isAdmin }) => {
       )}
 
       <h1>{event.title}</h1>
-      {new Date(event.startTime).toLocaleString()}
+      {new Date(event.startTime).toLocaleDateString()}
+      <br />
+      {`Start Time: ${new Date(event.startTime).toLocaleTimeString().replace(/:\d\d /, ' ')}`}
+      <br />
+      {`Tardy Time: ${new Date(event.tardyTime).toLocaleTimeString().replace(/:\d\d /, ' ')}`}
       <br />
       <br />
       <hr />
