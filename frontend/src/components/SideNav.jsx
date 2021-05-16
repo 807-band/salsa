@@ -12,9 +12,14 @@ const SideNav = ({ isAdmin, isEval }) => (
     </Link>
     {isAdmin
       && (
-        <Link to="/events/create" className={styles.childPage}>
-          Create Event
-        </Link>
+        <>
+          <Link to="/events/create" className={styles.childPage}>
+            Create Event
+          </Link>
+          <Link to="/events/groups" className={styles.childPage}>
+            Groups
+          </Link>
+        </>
       )}
     <Link to="/stations" className={styles.parentPage}>
       Stations

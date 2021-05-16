@@ -22,6 +22,8 @@ import Overview from './pages/Overview';
 import Profile from './pages/Profile';
 import Events from './pages/Events';
 import CreateEvent from './pages/events/Create';
+import Groups from './pages/events/Groups';
+import Group from './pages/events/groups/Group';
 import { getUserByUsername, getPermissions } from './lib/users';
 
 import SignInPage from './SignInPage';
@@ -69,6 +71,12 @@ const App = () => {
                   </Route>
                   <Route exact path="/events/create">
                     {isAdmin && <CreateEvent />}
+                  </Route>
+                  <Route exact path="/events/groups">
+                    {isAdmin && <Groups />}
+                  </Route>
+                  <Route exact path="/events/groups/:id">
+                    {isAdmin && <Group />}
                   </Route>
                   <Route exact path="/events/:id">
                     <Event isAdmin={isAdmin} />

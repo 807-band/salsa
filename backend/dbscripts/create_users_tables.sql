@@ -16,10 +16,7 @@ CREATE TABLE Permissions (
 
 CREATE TABLE BandGroups (
   groupID INT PRIMARY KEY AUTO_INCREMENT,
-  groupType VARCHAR(30) NOT NULL,
-  groupName VARCHAR(40) NOT NULL,
-
-  UNIQUE (groupType, groupName)
+  groupName VARCHAR(40) NOT NULL UNIQUE,
 );
 
 CREATE TABLE UserGroups (
