@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Card, ListGroup } from 'react-bootstrap';
+import { Card, ListGroup, Button } from 'react-bootstrap';
 import { useParams } from 'react-router';
-import { getGroupMembers } from '../../../lib/attendance';
+import { getGroupMembers } from '../../../lib/groups';
 import getSections from '../../../lib/sections';
 
 const Group = () => {
@@ -14,12 +14,13 @@ const Group = () => {
     getSections().then((res) => setSections(res));
   }, []);
 
-  console.log(members);
-
-  return members && sections && (
+  return members && members.length > 0 && sections && (
     <>
       <h1>
         {members[0].groupName}
+        <Button variant="primary" className="edit-button" href={`/events/groups/${params.id}/edit`}>
+          Edit
+        </Button>
       </h1>
 
       <SectionCards users={members} sections={sections} />

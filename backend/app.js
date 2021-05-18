@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
-const attendanceRoutes = require('./routes/attendance.js');
+const groupsRoutes = require('./routes/groups.js');
 const stationRoutes = require('./routes/stations.js');
 const userRoutes = require('./routes/users.js');
 const sectionRoutes = require('./routes/sections');
@@ -17,7 +17,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(upload.single('file'));
 
 app.use(cors({ origin: true, credentials: true }));
-app.use('/api/attendance/', attendanceRoutes);
+app.use('/api/groups/', groupsRoutes);
 app.use('/api/station/', stationRoutes);
 app.use('/api/user/', userRoutes);
 app.use('/api/section/', sectionRoutes);

@@ -36,8 +36,6 @@ const Station = ({ isAdmin }) => {
 };
 
 const GroupingCards = ({ groups }) => {
-  // I tore out some stuff here that looked pretty pointless, hopefully it still works
-  // TODO: check when we have real data
   groups.sort((a, b) => ((a.level > b.level) ? 1 : -1));
 
   return (
