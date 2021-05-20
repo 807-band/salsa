@@ -41,3 +41,8 @@ module.exports.editGroup = async (req, res) => {
 
   res.end();
 };
+
+module.exports.deleteGroup = async (req, res) => {
+  db.execute('DELETE FROM BandGroups WHERE groupID=?', [req.params.id]);
+  res.end();
+};

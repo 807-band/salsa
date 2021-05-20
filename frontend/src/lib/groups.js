@@ -25,3 +25,8 @@ export async function editGroup(groupID, name, members) {
   });
   return res.data;
 }
+
+export async function deleteGroup(groupID) {
+  const res = await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/groups/${groupID}`);
+  return res.data;
+}

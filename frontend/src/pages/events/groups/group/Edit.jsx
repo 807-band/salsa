@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Button, Card, Form, ListGroup,
+  Button, Card, Form, ListGroup, Modal,
 } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { Redirect } from 'react-router-dom';
-import { editGroup, getGroupMembers } from '../../../../lib/groups';
+import { deleteGroup, editGroup, getGroupMembers } from '../../../../lib/groups';
 import getSections from '../../../../lib/sections';
 import { getUsers } from '../../../../lib/users';
 
@@ -15,6 +15,7 @@ const CreateGroup = () => {
   const [currGroupMembers, setCurrGroupMembers] = useState(null);
   const [groupName, setGroupName] = useState('');
   const [redirect, setRedirect] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const params = useParams();
 
   useEffect(() => {
@@ -31,8 +32,34 @@ const CreateGroup = () => {
 
   return currGroupMembers && currGroupMembers.length > 0 && users && sections && (
     <>
-      {redirect && <Redirect push to={`/events/groups/${params.id}`} />}
+      {redirect && <Redirect push to={redirect} />}
       <h1>{`Edit Group: ${groupName}`}</h1>
+      <Button variant="danger" className="edit-button" onClick={() => setShowDeleteModal(true)}>
+        Delete Group
+      </Button>
+
+      <Modal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+      >
+        <Modal.Header className="danger-modal-header">
+          <Modal.Title>
+            WARNING: Are you sure you want to delete
+            {groupName}
+            ?
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{`Any ${groupName} events will default to whole band events.`}</Modal.Body>
+        <Modal.Footer>
+          <Button onClick={() => setShowDeleteModal(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={() => doDeleteGroup(params.id, setRedirect)}>
+            Yes, I&apos;m sure
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <br />
       <Form onSubmit={handleSubmit(params.id, newGroupMembers, setRedirect)}>
         <Form.Group controlId="name">
@@ -58,11 +85,16 @@ const CreateGroup = () => {
   );
 };
 
+const doDeleteGroup = async (groupID, setRedirect) => {
+  await deleteGroup(groupID);
+  setRedirect('/events/groups');
+};
+
 const handleSubmit = (groupID, newGroupMembers, setRedirect) => async (event) => {
   const form = event.currentTarget;
   event.preventDefault();
   await editGroup(groupID, form.name.value, Array.from(newGroupMembers));
-  setRedirect(true);
+  setRedirect(`/events/groups/${groupID}`);
 };
 
 const groupByProp = (xs, prop) => {
