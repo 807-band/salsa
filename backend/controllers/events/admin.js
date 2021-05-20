@@ -2,15 +2,15 @@ const db = require('../../config/db');
 
 module.exports.create = async (req, res) => {
   if (req.body.tardyTime) {
-    db.execute('INSERT INTO Events (title, startTime, tardyTime) VALUES (?, ?, ?)',
-      [req.body.title, req.body.startTime, req.body.tardyTime],
+    db.execute('INSERT INTO Events (title, startTime, tardyTime, groupID) VALUES (?, ?, ?, ?)',
+      [req.body.title, req.body.startTime, req.body.tardyTime, req.body.groupID],
       (err, results) => {
         req.body.eventID = results.insertId;
         res.jsonp(req.body);
       });
   } else {
-    db.execute('INSERT INTO Events (title, startTime) VALUES (?, ?)',
-      [req.body.title, req.body.startTime],
+    db.execute('INSERT INTO Events (title, startTime, groupID) VALUES (?, ?, ?)',
+      [req.body.title, req.body.startTime, req.body.groupID],
       (err, results) => {
         req.body.eventID = results.insertId;
         res.jsonp(req.body);

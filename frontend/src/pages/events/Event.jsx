@@ -2,14 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button, Form } from 'react-bootstrap';
 import { getEvent, putAttendance } from '../../lib/events';
+import { getGroupMembers } from '../../lib/groups';
 
 const Event = ({ isAdmin }) => {
   const [event, setEvent] = useState(null);
   const [currFile, setCurrFile] = useState(null);
+  const [group, setGroup] = useState(null);
   const params = useParams();
 
   useEffect(() => {
-    getEvent(params.id).then((res) => setEvent(res));
+    getEvent(params.id).then((res) => {
+      setEvent(res);
+      if (res.groupID) {
+        getGroupMembers(res.groupID).then((g) => setGroup(g[0].groupName));
+      } else {
+        setGroup('Whole Band');
+      }
+    });
     // TODO: get current file for event and display name as default file
   }, []);
 
@@ -29,6 +38,8 @@ const Event = ({ isAdmin }) => {
       {`Start Time: ${new Date(event.startTime).toLocaleTimeString().replace(/:\d\d /, ' ')}`}
       <br />
       {`Tardy Time: ${new Date(event.tardyTime).toLocaleTimeString().replace(/:\d\d /, ' ')}`}
+      <br />
+      {`Group to attend: ${group}`}
       <br />
       <br />
       <hr />
