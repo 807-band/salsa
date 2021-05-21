@@ -20,9 +20,17 @@ import EvaluateUser from './pages/evaluate/EvaluateUser';
 import EvaluateUserStation from './pages/evaluate/EvaluateUserStation';
 import Overview from './pages/Overview';
 import Profile from './pages/Profile';
+import Events from './pages/Events';
+import CreateEvent from './pages/events/Create';
+import Groups from './pages/events/Groups';
+import Group from './pages/events/groups/Group';
+import CreateGroup from './pages/events/groups/Create';
 import { getUserByUsername, getPermissions } from './lib/users';
 
 import SignInPage from './SignInPage';
+import Event from './pages/events/Event';
+import EditEvent from './pages/events/event/Edit';
+import EditGroup from './pages/events/groups/group/Edit';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -61,7 +69,28 @@ const App = () => {
                   </Route>
 
                   <Route exact path="/events">
-                    <h1>Under construction 🔨</h1>
+                    <Events />
+                  </Route>
+                  <Route exact path="/events/create">
+                    {isAdmin && <CreateEvent />}
+                  </Route>
+                  <Route exact path="/events/groups">
+                    {isAdmin && <Groups />}
+                  </Route>
+                  <Route exact path="/events/groups/create">
+                    {isAdmin && <CreateGroup />}
+                  </Route>
+                  <Route exact path="/events/groups/:id">
+                    {isAdmin && <Group />}
+                  </Route>
+                  <Route exact path="/events/groups/:id/edit">
+                    {isAdmin && <EditGroup />}
+                  </Route>
+                  <Route exact path="/events/:id">
+                    <Event isAdmin={isAdmin} />
+                  </Route>
+                  <Route exact path="/events/:id/edit">
+                    {isAdmin && <EditEvent />}
                   </Route>
 
                   <Route exact path="/stations">
