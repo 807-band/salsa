@@ -13,11 +13,12 @@ export async function postEvent(title, startTime, tardyTime, groupID) {
   });
 }
 
-export async function putEvent(id, title, startTime, tardyTime) {
+export async function putEvent(id, title, startTime, tardyTime, groupID) {
   await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`, {
     title,
     startTime,
     tardyTime,
+    groupID,
   });
 }
 

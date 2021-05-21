@@ -25,6 +25,8 @@ module.exports.updateEvent = async (req, res) => {
   Object.keys(req.body).forEach((key) => {
     if (req.body[key] === 'DEFAULT') {
       updates += `${key}=DEFAULT, `;
+    } else if (!req.body[key]) {
+      updates += `${key}=NULL, `;
     } else {
       updates += `${key}='${req.body[key]}', `;
     }

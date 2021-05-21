@@ -11,8 +11,6 @@ const CreateEvent = () => {
     getGroupNames().then((res) => setGroups(res));
   }, []);
 
-  console.log(groups);
-
   const handleSubmit = async (event) => {
     const form = event.currentTarget;
     if (form.checkValidity() === false) {

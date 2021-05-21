@@ -2,6 +2,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import React, { useEffect, useState } from 'react';
 import { Redirect, useParams } from 'react-router';
 import { deleteEvent, getEvent, putEvent } from '../../../lib/events';
+import { getGroupMembers, getGroupNames } from '../../../lib/groups';
 
 const EditEvent = () => {
   const [event, setEvent] = useState(null);
@@ -9,9 +10,19 @@ const EditEvent = () => {
   const params = useParams();
   const [validated, setValidated] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState(null);
+  const [groups, setGroups] = useState([]);
 
   useEffect(async () => {
-    getEvent(params.id).then((e) => setEvent(e));
+    getEvent(params.id).then((e) => {
+      setEvent(e);
+      if (e.groupID) {
+        getGroupMembers(e.groupID).then((g) => setSelectedGroup(g[0].groupName));
+      } else {
+        setSelectedGroup('Whole Band');
+      }
+    });
+    getGroupNames().then((res) => setGroups(res));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -22,12 +33,16 @@ const EditEvent = () => {
     if (form.checkValidity()) {
       const startTimeString = `${form.startDate.value} ${form.startTime.value}.00`;
       const tardyTimeString = form.tardyTime.value ? `${form.startDate.value} ${form.tardyTime.value}.00` : 'DEFAULT';
-      await putEvent(event.eventID, form.title.value, startTimeString, tardyTimeString);
+      const group = groups.find((g) => g.groupName === form.group.value);
+      await putEvent(
+        event.eventID, form.title.value, startTimeString,
+        tardyTimeString, group ? group.groupID : null,
+      );
       setRedirect(`/events/${event.eventID}`);
     }
   };
 
-  return event && (
+  return event && selectedGroup && (
     <>
       { redirect && (<Redirect push to={redirect} />)}
       <Modal show={showModal} onHide={() => setShowModal(false)}>
@@ -75,6 +90,15 @@ const EditEvent = () => {
             (defaults to 10 minutes after start time)
           </Form.Text>
           <Form.Control type="time" />
+        </Form.Group>
+
+        <Form.Group controlId="group">
+          <Form.Label>Group</Form.Label>
+          <Form.Control value={selectedGroup} onChange={(e) => setSelectedGroup(e.target.value)} type="text" required as="select">
+            <option>Whole Band</option>
+            {groups
+              .map((g) => <option key={g.groupID}>{g.groupName}</option>)}
+          </Form.Control>
         </Form.Group>
 
         <Button variant="primary" type="submit" className="edit-button">
