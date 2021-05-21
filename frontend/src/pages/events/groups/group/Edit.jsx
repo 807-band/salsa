@@ -44,12 +44,10 @@ const CreateGroup = () => {
       >
         <Modal.Header className="danger-modal-header">
           <Modal.Title>
-            WARNING: Are you sure you want to delete
-            {groupName}
-            ?
+            {`WARNING: Are you sure you want to delete ${groupName}?`}
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>{`Any ${groupName} events will default to whole band events.`}</Modal.Body>
+        <Modal.Body>{`Any "${groupName}" events will default to "Whole Band" events.`}</Modal.Body>
         <Modal.Footer>
           <Button onClick={() => setShowDeleteModal(false)}>
             Cancel
