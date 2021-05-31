@@ -12,7 +12,7 @@ CREATE TABLE Attendance (
   attendanceID INT AUTO_INCREMENT PRIMARY KEY,
   eventID INT NOT NULL,
   userID INT NOT NULL,
-  timeArrived DATETIME,
+  timeArrived TIME,
 
   FOREIGN KEY (eventID) REFERENCES Events (eventID) ON DELETE CASCADE,
   FOREIGN KEY (userID) REFERENCES Users (userID) ON DELETE CASCADE

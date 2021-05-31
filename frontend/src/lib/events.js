@@ -22,14 +22,6 @@ export async function putEvent(id, title, startTime, tardyTime, groupID) {
   });
 }
 
-export async function putAttendance(id, file) {
-  await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/attendance`, file, {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  });
-}
-
 export async function deleteEvent(id) {
   await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
 }

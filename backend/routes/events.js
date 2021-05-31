@@ -10,7 +10,6 @@ const router = express.Router();
 router.post('/', events.admin.create);
 router.put('/:id', events.admin.updateEvent);
 router.delete('/:id', events.admin.delete);
-router.put('/:id/attendance', events.admin.putAttendance);
 
 /**
  * selectors

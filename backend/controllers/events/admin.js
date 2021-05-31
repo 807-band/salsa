@@ -39,14 +39,6 @@ module.exports.updateEvent = async (req, res) => {
   res.end();
 };
 
-module.exports.putAttendance = async (req, res) => {
-  const eventID = req.params.id;
-  console.log(eventID);
-  console.log(req.file.buffer.toString('utf-8'));
-  // TODO: parse attendance & put info in DB
-  res.end();
-};
-
 module.exports.delete = async (req, res) => {
   await db.execute('DELETE FROM Events WHERE eventID=?', [req.params.id]);
   res.end();
