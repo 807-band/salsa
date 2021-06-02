@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { Button, Form } from 'react-bootstrap';
+import {
+  Button, Card, Form, ListGroup,
+} from 'react-bootstrap';
 import { getEvent } from '../../lib/events';
-import putAttendance from '../../lib/attendance';
+import { putAttendance, getAttendance } from '../../lib/attendance';
 import { getGroupMembers } from '../../lib/groups';
 
 const Event = ({ isAdmin }) => {
@@ -10,6 +12,7 @@ const Event = ({ isAdmin }) => {
   const [currFile, setCurrFile] = useState(null);
   const [group, setGroup] = useState(null);
   const [message, setMessage] = useState(null);
+  const [attendance, setAttendance] = useState([]);
   const params = useParams();
 
   useEffect(() => {
@@ -21,8 +24,7 @@ const Event = ({ isAdmin }) => {
         setGroup('Whole Band');
       }
     });
-    // TODO: get current file for event and display name as default file
-    // setCurrFile({ name: 'poopoo' });
+    getAttendance(params.id).then((res) => setAttendance(res));
   }, []);
 
   return event && (
@@ -48,7 +50,11 @@ const Event = ({ isAdmin }) => {
       <hr />
       <br />
       <h1>Attendance</h1>
+      <Attendance users={attendance} tardyTime={event.tardyTime} />
       <br />
+      <hr />
+      <br />
+      Upload attendance
       <Form onSubmit={handleSubmit(event.eventID, currFile, setMessage)}>
         <Form.Group controlId="file" onChange={(e) => setCurrFile(e.target.files[0])}>
           <Form.File id="formcheck-api-custom" custom>
@@ -60,13 +66,38 @@ const Event = ({ isAdmin }) => {
             <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
           </Form.File>
         </Form.Group>
-        <br />
         <Button type="submit">
           Submit
         </Button>
       </Form>
     </>
   );
+};
+
+const groupByProp = (xs, prop) => {
+  const grouped = {};
+  for (let i = 0; i < xs.length; i += 1) {
+    const p = xs[i][prop];
+    if (!grouped[p]) { grouped[p] = []; }
+    grouped[p].push(xs[i]);
+  }
+  return grouped;
+};
+
+const Attendance = ({ users, tardyTime }) => {
+  const groupedUsers = groupByProp(users, 'section');
+  return Object.keys(groupedUsers).map((section) => (
+    <Card key={section}>
+      <Card.Header className="card-header">{section}</Card.Header>
+      <ListGroup>
+        {groupedUsers[section].map((user) => (
+          <ListGroup.Item className="card-item" key={user.userID}>
+            {`${user.name} || ${user.timeArrived} || ${tardyTime}`}
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
+    </Card>
+  ));
 };
 
 const handleSubmit = (id, file, setMessage) => async (e) => {

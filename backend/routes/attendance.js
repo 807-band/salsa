@@ -9,4 +9,10 @@ const router = express.Router();
 
 router.put('/:id', attendance.admin.putAttendance);
 
+/**
+ * selector operations
+ */
+
+router.get('/:id', attendance.selector.getAttendance);
+
 module.exports = router;
