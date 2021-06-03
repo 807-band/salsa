@@ -6,11 +6,13 @@ import {
 import { getEvent } from '../../lib/events';
 import { putAttendance, getAttendance } from '../../lib/attendance';
 import { getGroupMembers } from '../../lib/groups';
+import { getUsers } from '../../lib/users';
 
 const Event = ({ isAdmin }) => {
   const [event, setEvent] = useState(null);
   const [currFile, setCurrFile] = useState(null);
   const [group, setGroup] = useState(null);
+  const [groupMembers, setGroupMembers] = useState(null);
   const [message, setMessage] = useState(null);
   const [attendance, setAttendance] = useState([]);
   const params = useParams();
@@ -19,15 +21,19 @@ const Event = ({ isAdmin }) => {
     getEvent(params.id).then((res) => {
       setEvent(res);
       if (res.groupID) {
-        getGroupMembers(res.groupID).then((g) => setGroup(g[0].groupName));
+        getGroupMembers(res.groupID).then((g) => {
+          setGroup(g[0].groupName);
+          setGroupMembers(g);
+        });
       } else {
         setGroup('Whole Band');
+        getUsers().then((users) => setGroupMembers(users));
       }
     });
     getAttendance(params.id).then((res) => setAttendance(res));
   }, []);
 
-  return event && (
+  return event && groupMembers && (
     <>
       {isAdmin && (
         <Link to={`/events/${event.eventID}/edit`}>
@@ -50,7 +56,7 @@ const Event = ({ isAdmin }) => {
       <hr />
       <br />
       <h1>Attendance</h1>
-      <Attendance users={attendance} tardyTime={event.tardyTime} />
+      <Attendance attendance={attendance} groupMembers={groupMembers} tardyTime={event.tardyTime} />
       <br />
       <hr />
       <br />
@@ -92,18 +98,30 @@ const evalTardy = (timeArrived, tardyTime) => {
   return false;
 };
 
-const Attendance = ({ users, tardyTime }) => {
-  const groupedUsers = groupByProp(users, 'section');
-  return Object.keys(groupedUsers).map((section) => (
+const Attendance = ({ attendance, groupMembers, tardyTime }) => {
+  const attendanceBySection = groupByProp(attendance, 'section');
+  const groupMembersBySection = groupByProp(groupMembers, 'Section');
+  return Object.keys(groupMembersBySection).map((section) => (
     <Card key={section}>
       <Card.Header className="card-header">{section}</Card.Header>
       <ListGroup>
-        {groupedUsers[section].map((user) => {
-          const isTardy = evalTardy(user.timeArrived, tardyTime);
+        {groupMembersBySection[section].map((user) => {
+          const userAttendance = attendanceBySection[section].find((u) => u.userID === user.userID);
+
+          // no record of arrival for this user
+          if (!userAttendance) {
+            return (
+              <ListGroup.Item className="card-item" key={user.userID} style={{ color: 'red' }}>
+                {`${user.name} || (ABSENT)`}
+              </ListGroup.Item>
+            );
+          }
+
+          const isTardy = evalTardy(userAttendance.timeArrived, tardyTime);
           const textStyle = isTardy ? { color: 'red' } : { color: 'green' };
           return (
             <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
-              {`${user.name} || (arrived: ${user.timeArrived})`}
+              {`${user.name} || (arrived: ${userAttendance.timeArrived})`}
             </ListGroup.Item>
           );
         })}
