@@ -56,7 +56,13 @@ const Event = ({ isAdmin }) => {
       <hr />
       <br />
       <h1>Attendance</h1>
-      <Attendance attendance={attendance} groupMembers={groupMembers} tardyTime={event.tardyTime} />
+      {attendance.length > 0 && (
+        <Attendance
+          attendance={attendance}
+          groupMembers={groupMembers}
+          tardyTime={event.tardyTime}
+        />
+      )}
       <br />
       <hr />
       <br />
