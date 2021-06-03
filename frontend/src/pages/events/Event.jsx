@@ -84,17 +84,29 @@ const groupByProp = (xs, prop) => {
   return grouped;
 };
 
+const evalTardy = (timeArrived, tardyTime) => {
+  const tardyDate = new Date(tardyTime);
+  const timeArrivedParts = timeArrived.split(':');
+  if (timeArrivedParts[0] > tardyDate.getHours()) return true;
+  if (timeArrivedParts[1] > tardyDate.getMinutes()) return true;
+  return false;
+};
+
 const Attendance = ({ users, tardyTime }) => {
   const groupedUsers = groupByProp(users, 'section');
   return Object.keys(groupedUsers).map((section) => (
     <Card key={section}>
       <Card.Header className="card-header">{section}</Card.Header>
       <ListGroup>
-        {groupedUsers[section].map((user) => (
-          <ListGroup.Item className="card-item" key={user.userID}>
-            {`${user.name} || ${user.timeArrived} || ${tardyTime}`}
-          </ListGroup.Item>
-        ))}
+        {groupedUsers[section].map((user) => {
+          const isTardy = evalTardy(user.timeArrived, tardyTime);
+          const textStyle = isTardy ? { color: 'red' } : { color: 'green' };
+          return (
+            <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
+              {`${user.name} || (arrived: ${user.timeArrived})`}
+            </ListGroup.Item>
+          );
+        })}
       </ListGroup>
     </Card>
   ));
