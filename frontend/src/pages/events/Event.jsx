@@ -99,35 +99,37 @@ const groupByProp = (xs, prop) => {
 const evalTardy = (timeArrived, tardyTime) => {
   const tardyDate = new Date(tardyTime);
   const timeArrivedParts = timeArrived.split(':');
-  if (timeArrivedParts[0] > tardyDate.getHours()) return true;
-  if (timeArrivedParts[1] > tardyDate.getMinutes()) return true;
+  if (parseInt(timeArrivedParts[0], 10) > tardyDate.getHours()) return true;
+  if (parseInt(timeArrivedParts[0], 10) === tardyDate.getHours()
+    && parseInt(timeArrivedParts[1], 10) > tardyDate.getMinutes()) return true;
   return false;
 };
 
 const Attendance = ({ attendance, groupMembers, tardyTime }) => {
   const attendanceBySection = groupByProp(attendance, 'section');
-  const groupMembersBySection = groupByProp(groupMembers, 'Section');
+  const groupMembersBySection = groupByProp(groupMembers, 'section');
   return Object.keys(groupMembersBySection).map((section) => (
     <Card key={section}>
       <Card.Header className="card-header">{section}</Card.Header>
       <ListGroup>
         {groupMembersBySection[section].map((user) => {
-          const userAttendance = attendanceBySection[section].find((u) => u.userID === user.userID);
-
-          // no record of arrival for this user
-          if (!userAttendance) {
-            return (
-              <ListGroup.Item className="card-item" key={user.userID} style={{ color: 'red' }}>
-                {`${user.name} || (ABSENT)`}
-              </ListGroup.Item>
-            );
+          if (attendanceBySection[section]) {
+            const userAttendance = attendanceBySection[section]
+              .find((u) => u.userID === user.userID);
+            if (userAttendance) {
+              const isTardy = evalTardy(userAttendance.timeArrived, tardyTime);
+              const textStyle = isTardy ? { color: 'red' } : { color: 'green' };
+              return (
+                <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
+                  {`${user.name} || (arrived: ${userAttendance.timeArrived})`}
+                </ListGroup.Item>
+              );
+            }
           }
-
-          const isTardy = evalTardy(userAttendance.timeArrived, tardyTime);
-          const textStyle = isTardy ? { color: 'red' } : { color: 'green' };
+          // no record of arrival for this section or user
           return (
-            <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
-              {`${user.name} || (arrived: ${userAttendance.timeArrived})`}
+            <ListGroup.Item className="card-item" key={user.userID} style={{ color: 'red' }}>
+              {`${user.name} || (ABSENT)`}
             </ListGroup.Item>
           );
         })}

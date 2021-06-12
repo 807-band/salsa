@@ -6,7 +6,7 @@ const db = require('../../config/db');
 
 module.exports.getAll = async (req, res) => {
   db.execute(
-    'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS Section FROM Users '
+    'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS section FROM Users '
     + 'JOIN SectionMembers ON Users.userID=SectionMembers.userID '
     + 'JOIN Sections ON SectionMembers.sectionID=Sections.sectionID '
     + 'ORDER BY sectionID',
@@ -19,7 +19,7 @@ module.exports.getAll = async (req, res) => {
 
 module.exports.getById = async (req, res) => {
   db.execute(
-    'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS Section FROM Users '
+    'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS section FROM Users '
     + 'LEFT JOIN SectionMembers ON Users.userID=SectionMembers.userID '
     + 'LEFT JOIN Sections ON SectionMembers.sectionID=Sections.sectionID '
     + 'WHERE Users.userID=?', [req.params.id],
@@ -32,7 +32,7 @@ module.exports.getById = async (req, res) => {
 
 module.exports.getByUsername = async (req, res) => {
   db.execute(
-    'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS Section FROM Users '
+    'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS section FROM Users '
     + 'LEFT JOIN SectionMembers ON Users.userID=SectionMembers.userID '
     + 'LEFT JOIN Sections ON SectionMembers.sectionID=Sections.sectionID '
     + 'WHERE Users.username=?', [req.params.username],
