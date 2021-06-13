@@ -9,6 +9,7 @@ const groups = require('../controllers/groups');
 
 router.get('/names', groups.selector.getGroupNames);
 router.get('/:id', groups.selector.getGroupMembers);
+router.get('/byuser/:id', groups.selector.getGroupsByUser);
 
 /**
  * Admin Operations

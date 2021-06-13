@@ -31,6 +31,8 @@ import SignInPage from './SignInPage';
 import Event from './pages/events/Event';
 import EditEvent from './pages/events/event/Edit';
 import EditGroup from './pages/events/groups/group/Edit';
+import Attendance from './pages/events/Attendance';
+import UserAttendance from './pages/events/attendance/UserAttendance';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -76,6 +78,12 @@ const App = () => {
                   </Route>
                   <Route exact path="/events/groups">
                     {isAdmin && <Groups />}
+                  </Route>
+                  <Route exact path="/events/attendance">
+                    {isAdmin && <Attendance />}
+                  </Route>
+                  <Route exact path="/events/attendance/:id">
+                    {isAdmin && <UserAttendance />}
                   </Route>
                   <Route exact path="/events/groups/create">
                     {isAdmin && <CreateGroup />}

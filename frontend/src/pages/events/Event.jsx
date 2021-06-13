@@ -4,9 +4,10 @@ import {
   Button, Card, Form, ListGroup,
 } from 'react-bootstrap';
 import { getEvent } from '../../lib/events';
-import { putAttendance, getAttendance } from '../../lib/attendance';
+import { putAttendance, getAttendanceByEvent } from '../../lib/attendance';
 import { getGroupMembers } from '../../lib/groups';
 import { getUsers } from '../../lib/users';
+import groupByProp from '../../lib/util';
 
 const Event = ({ isAdmin }) => {
   const [event, setEvent] = useState(null);
@@ -30,7 +31,7 @@ const Event = ({ isAdmin }) => {
         getUsers().then((users) => setGroupMembers(users));
       }
     });
-    getAttendance(params.id).then((res) => setAttendance(res));
+    getAttendanceByEvent(params.id).then((res) => setAttendance(res));
   }, []);
 
   return event && groupMembers && (
@@ -86,16 +87,6 @@ const Event = ({ isAdmin }) => {
   );
 };
 
-const groupByProp = (xs, prop) => {
-  const grouped = {};
-  for (let i = 0; i < xs.length; i += 1) {
-    const p = xs[i][prop];
-    if (!grouped[p]) { grouped[p] = []; }
-    grouped[p].push(xs[i]);
-  }
-  return grouped;
-};
-
 const evalTardy = (timeArrived, tardyTime) => {
   const tardyDate = new Date(tardyTime);
   const timeArrivedParts = timeArrived.split(':');
@@ -106,6 +97,8 @@ const evalTardy = (timeArrived, tardyTime) => {
 };
 
 const Attendance = ({ attendance, groupMembers, tardyTime }) => {
+  // best effort at sorting by lastname, since full name is all in one attribute
+  groupMembers.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
   const attendanceBySection = groupByProp(attendance, 'section');
   const groupMembersBySection = groupByProp(groupMembers, 'section');
   return Object.keys(groupMembersBySection).map((section) => (
@@ -118,18 +111,24 @@ const Attendance = ({ attendance, groupMembers, tardyTime }) => {
               .find((u) => u.userID === user.userID);
             if (userAttendance) {
               const isTardy = evalTardy(userAttendance.timeArrived, tardyTime);
-              const textStyle = isTardy ? { color: 'red' } : { color: 'green' };
+              const textStyle = isTardy ? { color: 'orange' } : { color: 'green' };
               return (
-                <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
-                  {`${user.name} || (arrived: ${userAttendance.timeArrived})`}
+                <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={textStyle}>
+                  {user.name}
+                  <br />
+                  {isTardy
+                    ? <small>{`TARDY -- arrived: ${userAttendance.timeArrived}`}</small>
+                    : <small>{`ON TIME -- arrived: ${userAttendance.timeArrived}`}</small>}
                 </ListGroup.Item>
               );
             }
           }
           // no record of arrival for this section or user
           return (
-            <ListGroup.Item className="card-item" key={user.userID} style={{ color: 'red' }}>
-              {`${user.name} || (ABSENT)`}
+            <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={{ color: 'red' }}>
+              {user.name}
+              <br />
+              <small>ABSENT</small>
             </ListGroup.Item>
           );
         })}

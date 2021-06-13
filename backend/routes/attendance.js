@@ -13,6 +13,7 @@ router.put('/:id', attendance.admin.putAttendance);
  * selector operations
  */
 
-router.get('/:id', attendance.selector.getAttendance);
+router.get('/byevent/:id', attendance.selector.getAttendanceByEvent);
+router.get('/byuser/:id', attendance.selector.getAttendanceByUser);
 
 module.exports = router;

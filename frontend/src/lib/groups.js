@@ -10,6 +10,11 @@ export async function getGroupNames() {
   return res.data;
 }
 
+export async function getGroupsByUser(userID) {
+  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/groups/byuser/${userID}`);
+  return res.data;
+}
+
 export async function createGroup(name, members) {
   const res = await axios.post(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/groups`, {
     name,

@@ -1,10 +1,10 @@
 import { Card, ListGroup } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
-import { getUsers } from '../lib/users';
-import getSections from '../lib/sections';
-import groupByProp from '../lib/util';
+import { getUsers } from '../../lib/users';
+import getSections from '../../lib/sections';
+import groupByProp from '../../lib/util';
 
-const Evaluate = () => {
+const Attendance = () => {
   const [users, setUsers] = useState([]);
   const [sections, setSections] = useState([]);
 
@@ -20,7 +20,7 @@ const Evaluate = () => {
   return (
     <>
       <h1>
-        Evaluate Member
+        User Attendance
       </h1>
 
       <SectionCards users={users} sections={sections} />
@@ -37,7 +37,7 @@ const SectionCards = ({ users, sections }) => {
       <Card.Header className="card-header">{section.name}</Card.Header>
       <ListGroup>
         {groupedUsers[section.sectionID] && groupedUsers[section.sectionID].map((user) => (
-          <ListGroup.Item className="card-item" action href={`/evaluate/${user.userID}`} key={user.userID}>
+          <ListGroup.Item className="card-item" action href={`/events/attendance/${user.userID}`} key={user.userID}>
             {user.name}
           </ListGroup.Item>
         ))}
@@ -46,4 +46,4 @@ const SectionCards = ({ users, sections }) => {
   ));
 };
 
-export default Evaluate;
+export default Attendance;

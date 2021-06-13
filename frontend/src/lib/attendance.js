@@ -13,7 +13,12 @@ export async function putAttendance(id, file) {
   return res.data;
 }
 
-export async function getAttendance(id) {
-  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/attendance/${id}`);
+export async function getAttendanceByEvent(id) {
+  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/attendance/byevent/${id}`);
+  return res.data;
+}
+
+export async function getAttendanceByUser(id) {
+  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/attendance/byuser/${id}`);
   return res.data;
 }
