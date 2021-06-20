@@ -17,5 +17,6 @@ router.delete('/:id', events.admin.delete);
 
 router.get('/', events.selector.getAll);
 router.get('/:id', events.selector.getById);
+router.get('/:id/members', events.selector.getEventMembers);
 
 module.exports = router;

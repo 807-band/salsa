@@ -3,17 +3,16 @@ import { Link, useParams } from 'react-router-dom';
 import {
   Button, Card, Form, ListGroup,
 } from 'react-bootstrap';
-import { getEvent } from '../../lib/events';
+import { getEvent, getEventMembers } from '../../lib/events';
 import { putAttendance, getAttendanceByEvent } from '../../lib/attendance';
 import { getGroupMembers } from '../../lib/groups';
-import { getUsers } from '../../lib/users';
 import groupByProp from '../../lib/util';
 
 const Event = ({ isAdmin }) => {
   const [event, setEvent] = useState(null);
   const [currFile, setCurrFile] = useState(null);
   const [group, setGroup] = useState(null);
-  const [groupMembers, setGroupMembers] = useState(null);
+  const [eventMembers, setEventMembers] = useState(null);
   const [message, setMessage] = useState(null);
   const [attendance, setAttendance] = useState([]);
   const params = useParams();
@@ -24,17 +23,16 @@ const Event = ({ isAdmin }) => {
       if (res.groupID) {
         getGroupMembers(res.groupID).then((g) => {
           setGroup(g[0].groupName);
-          setGroupMembers(g);
         });
       } else {
         setGroup('Whole Band');
-        getUsers().then((users) => setGroupMembers(users));
       }
     });
+    getEventMembers(params.id).then((res) => setEventMembers(res));
     getAttendanceByEvent(params.id).then((res) => setAttendance(res));
   }, []);
 
-  return event && groupMembers && (
+  return event && eventMembers && (
     <>
       {isAdmin && (
         <Link to={`/events/${event.eventID}/edit`}>
@@ -57,13 +55,11 @@ const Event = ({ isAdmin }) => {
       <hr />
       <br />
       <h1>Attendance</h1>
-      {attendance.length > 0 && (
-        <Attendance
-          attendance={attendance}
-          groupMembers={groupMembers}
-          tardyTime={event.tardyTime}
-        />
-      )}
+      <Attendance
+        attendance={attendance}
+        eventMembers={eventMembers}
+        tardyTime={event.tardyTime}
+      />
       <br />
       <hr />
       <br />
@@ -96,16 +92,16 @@ const evalTardy = (timeArrived, tardyTime) => {
   return false;
 };
 
-const Attendance = ({ attendance, groupMembers, tardyTime }) => {
+const Attendance = ({ attendance, eventMembers, tardyTime }) => {
   // best effort at sorting by lastname, since full name is all in one attribute
-  groupMembers.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
+  eventMembers.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
   const attendanceBySection = groupByProp(attendance, 'section');
-  const groupMembersBySection = groupByProp(groupMembers, 'section');
-  return Object.keys(groupMembersBySection).map((section) => (
+  const eventMembersBySection = groupByProp(eventMembers, 'section');
+  return Object.keys(eventMembersBySection).map((section) => (
     <Card key={section}>
       <Card.Header className="card-header">{section}</Card.Header>
       <ListGroup>
-        {groupMembersBySection[section].map((user) => {
+        {eventMembersBySection[section].map((user) => {
           if (attendanceBySection[section]) {
             const userAttendance = attendanceBySection[section]
               .find((u) => u.userID === user.userID);
@@ -115,6 +111,7 @@ const Attendance = ({ attendance, groupMembers, tardyTime }) => {
               return (
                 <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={textStyle}>
                   {user.name}
+                  {user.oldName && ` (subbing for ${user.oldName})`}
                   <br />
                   {isTardy
                     ? <small>{`TARDY -- arrived: ${userAttendance.timeArrived}`}</small>
@@ -123,12 +120,15 @@ const Attendance = ({ attendance, groupMembers, tardyTime }) => {
               );
             }
           }
-          // no record of arrival for this section or user
+          // no record of arrival for this section or user OR no attendance at all
+          const textStyle = attendance.length > 0 ? { color: 'red' } : { color: 'black' };
           return (
-            <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={{ color: 'red' }}>
+            <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={textStyle}>
               {user.name}
+              {user.oldName && ` (subbing for ${user.oldName})`}
               <br />
-              <small>ABSENT</small>
+              {attendance.length > 0
+                && <small>ABSENT</small>}
             </ListGroup.Item>
           );
         })}
