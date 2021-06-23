@@ -43,3 +43,38 @@ module.exports.delete = async (req, res) => {
   await db.execute('DELETE FROM Events WHERE eventID=?', [req.params.id]);
   res.end();
 };
+
+/**
+ * substitutions
+ */
+
+module.exports.createSub = async (req, res) => {
+  const eventID = req.params.id;
+  await db.execute('INSERT INTO Substitutions (eventID, oldUserID, newUserID) VALUES (?, ?, ?)',
+    [eventID, req.body.oldUserID, req.body.newUserID],
+    (err, results) => {
+      if (err) console.log(err);
+      res.send(results);
+    });
+};
+
+module.exports.updateSub = async (req, res) => {
+  const eventID = req.params.id;
+  await db.execute('UPDATE Substitutions SET newUserID=? WHERE eventID=? AND oldUserID=?',
+    [req.body.newUserID, eventID, req.body.oldUserID],
+    (err, results) => {
+      if (err) console.log(err);
+      res.send(results);
+    });
+};
+
+module.exports.deleteSub = async (req, res) => {
+  const eventID = req.params.id;
+  const { oldUserID } = req.params;
+  await db.execute('DELETE FROM Substitutions WHERE eventID=? AND oldUserID=?',
+    [eventID, oldUserID],
+    (err, results) => {
+      if (err) console.log(err);
+      res.send(results);
+    });
+};

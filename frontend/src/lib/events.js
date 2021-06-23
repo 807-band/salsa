@@ -26,6 +26,24 @@ export async function deleteEvent(id) {
   await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
 }
 
+export async function postSub(id, oldUserID, newUserID) {
+  await axios.post(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub`, {
+    oldUserID,
+    newUserID,
+  });
+}
+
+export async function putSub(id, oldUserID, newUserID) {
+  await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub`, {
+    oldUserID,
+    newUserID,
+  });
+}
+
+export async function deleteSub(id, oldUserID) {
+  await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub/${oldUserID}`);
+}
+
 /**
  * selectors
  */

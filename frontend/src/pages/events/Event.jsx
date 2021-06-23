@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
-  Button, Card, Form, ListGroup,
+  Button, Card, Form, ListGroup, Col, Row,
 } from 'react-bootstrap';
-import { getEvent, getEventMembers } from '../../lib/events';
+import {
+  deleteSub, getEvent, getEventMembers, postSub,
+} from '../../lib/events';
 import { putAttendance, getAttendanceByEvent } from '../../lib/attendance';
 import { getGroupMembers } from '../../lib/groups';
 import groupByProp from '../../lib/util';
+import { getUsers } from '../../lib/users';
 
 const Event = ({ isAdmin }) => {
   const [event, setEvent] = useState(null);
@@ -15,6 +18,9 @@ const Event = ({ isAdmin }) => {
   const [eventMembers, setEventMembers] = useState(null);
   const [message, setMessage] = useState(null);
   const [attendance, setAttendance] = useState([]);
+  // id of member being subbed, null otherwise
+  const [subbing, setSubbing] = useState(null);
+  const [possibleSubs, setPossibleSubs] = useState(null);
   const params = useParams();
 
   useEffect(() => {
@@ -56,15 +62,20 @@ const Event = ({ isAdmin }) => {
       <br />
       <h1>Attendance</h1>
       <Attendance
+        eventID={event.eventID}
         attendance={attendance}
         eventMembers={eventMembers}
         tardyTime={event.tardyTime}
+        subbing={subbing}
+        setSubbing={setSubbing}
+        possibleSubs={possibleSubs}
+        setPossibleSubs={setPossibleSubs}
       />
       <br />
       <hr />
       <br />
       Upload attendance
-      <Form onSubmit={handleSubmit(event.eventID, currFile, setMessage)}>
+      <Form onSubmit={submitAttendance(event.eventID, currFile, setMessage)}>
         <Form.Group controlId="file" onChange={(e) => setCurrFile(e.target.files[0])}>
           <Form.File id="formcheck-api-custom" custom>
             <Form.File.Input isValid={message === 'Success'} isInvalid={message !== 'Success' && message !== null} />
@@ -92,7 +103,61 @@ const evalTardy = (timeArrived, tardyTime) => {
   return false;
 };
 
-const Attendance = ({ attendance, eventMembers, tardyTime }) => {
+const getPossibleSubs = async (eventMembers) => {
+  // get all members
+  const allMembers = await getUsers();
+  // remove members that are already attending
+  const possibleSubs = allMembers.filter(
+    (m) => !eventMembers.some((em) => em.userID === m.userID),
+  );
+  return possibleSubs;
+};
+
+const submitSub = (eventID, oldUserID, possibleSubs) => (event) => {
+  const sub = possibleSubs.find((s) => s.name === event.currentTarget.newUserID.value);
+  postSub(eventID, oldUserID, sub.userID);
+};
+
+const SubForm = ({
+  eventID, oldUserID, subbing, setSubbing, eventMembers, possibleSubs, setPossibleSubs,
+}) => {
+  if (subbing !== oldUserID) {
+    return (
+      <Button onClick={() => setSubbing(oldUserID)}>
+        Substitute
+      </Button>
+    );
+  }
+  if (!possibleSubs) getPossibleSubs(eventMembers).then((ps) => setPossibleSubs(ps));
+  if (!possibleSubs || possibleSubs.length === 0) {
+    return <>no available subs</>;
+  }
+  return (
+    <Form onSubmit={submitSub(eventID, oldUserID, possibleSubs)}>
+      <Form.Group controlId="newUserID">
+        <Form.Control type="text" required as="select">
+          {possibleSubs
+            .map((s) => <option key={s.userID}>{s.name}</option>)}
+        </Form.Control>
+      </Form.Group>
+      <Button type="submit">
+        Confirm
+      </Button>
+    </Form>
+  );
+};
+
+const RemoveSubForm = ({ eventID, oldUserID }) => (
+  <Form onSubmit={() => deleteSub(eventID, oldUserID)}>
+    <Button type="submit">
+      Remove Sub
+    </Button>
+  </Form>
+);
+
+const Attendance = ({
+  eventID, attendance, eventMembers, tardyTime, subbing, setSubbing, possibleSubs, setPossibleSubs,
+}) => {
   // best effort at sorting by lastname, since full name is all in one attribute
   eventMembers.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
   const attendanceBySection = groupByProp(attendance, 'section');
@@ -109,13 +174,32 @@ const Attendance = ({ attendance, eventMembers, tardyTime }) => {
               const isTardy = evalTardy(userAttendance.timeArrived, tardyTime);
               const textStyle = isTardy ? { color: 'orange' } : { color: 'green' };
               return (
-                <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={textStyle}>
-                  {user.name}
-                  {user.oldName && ` (subbing for ${user.oldName})`}
-                  <br />
-                  {isTardy
-                    ? <small>{`TARDY -- arrived: ${userAttendance.timeArrived}`}</small>
-                    : <small>{`ON TIME -- arrived: ${userAttendance.timeArrived}`}</small>}
+                <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
+                  <Row>
+                    <Col>
+                      {user.name}
+                      {user.oldUserID && ` (subbing for ${user.oldName})`}
+                      <br />
+                      {isTardy
+                        ? <small>{`TARDY -- arrived: ${userAttendance.timeArrived}`}</small>
+                        : <small>{`ON TIME -- arrived: ${userAttendance.timeArrived}`}</small>}
+                    </Col>
+                    <Col sm={4} md={3} xl={2}>
+                      {user.oldUserID
+                        ? <RemoveSubForm eventID={eventID} oldUserID={user.oldUserID} />
+                        : (
+                          <SubForm
+                            eventID={eventID}
+                            oldUserID={user.userID}
+                            subbing={subbing}
+                            setSubbing={setSubbing}
+                            eventMembers={eventMembers}
+                            possibleSubs={possibleSubs}
+                            setPossibleSubs={setPossibleSubs}
+                          />
+                        )}
+                    </Col>
+                  </Row>
                 </ListGroup.Item>
               );
             }
@@ -123,12 +207,31 @@ const Attendance = ({ attendance, eventMembers, tardyTime }) => {
           // no record of arrival for this section or user OR no attendance at all
           const textStyle = attendance.length > 0 ? { color: 'red' } : { color: 'black' };
           return (
-            <ListGroup.Item className="card-item" key={user.userID} action href={`/events/attendance/${user.userID}`} style={textStyle}>
-              {user.name}
-              {user.oldName && ` (subbing for ${user.oldName})`}
-              <br />
-              {attendance.length > 0
-                && <small>ABSENT</small>}
+            <ListGroup.Item className="card-item" key={user.userID} style={textStyle}>
+              <Row>
+                <Col>
+                  {user.name}
+                  {user.oldUserID && ` (subbing for ${user.oldName})`}
+                  <br />
+                  {attendance.length > 0
+                    && <small>ABSENT</small>}
+                </Col>
+                <Col sm={4} md={3} xl={2}>
+                  {user.oldUserID
+                    ? <RemoveSubForm eventID={eventID} oldUserID={user.oldUserID} />
+                    : (
+                      <SubForm
+                        eventID={eventID}
+                        oldUserID={user.userID}
+                        subbing={subbing}
+                        setSubbing={setSubbing}
+                        eventMembers={eventMembers}
+                        possibleSubs={possibleSubs}
+                        setPossibleSubs={setPossibleSubs}
+                      />
+                    )}
+                </Col>
+              </Row>
             </ListGroup.Item>
           );
         })}
@@ -137,7 +240,7 @@ const Attendance = ({ attendance, eventMembers, tardyTime }) => {
   ));
 };
 
-const handleSubmit = (id, file, setMessage) => async (e) => {
+const submitAttendance = (id, file, setMessage) => async (e) => {
   e.preventDefault();
   e.stopPropagation();
   const data = new FormData();

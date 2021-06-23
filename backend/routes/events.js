@@ -11,6 +11,10 @@ router.post('/', events.admin.create);
 router.put('/:id', events.admin.updateEvent);
 router.delete('/:id', events.admin.delete);
 
+router.post('/:id/sub', events.admin.createSub);
+router.put('/:id/sub', events.admin.updateSub);
+router.delete('/:id/sub/:oldUserID', events.admin.deleteSub);
+
 /**
  * selectors
  */
