@@ -42,7 +42,7 @@ module.exports.getEventMembers = async (req, res) => {
           if (err2) console.log(err2);
           res.jsonp(results2);
         });
-      } else { // null groupID -> event is for whole band...
+      } else { // null groupID -> event is for whole band... (hence no subs)
         db.execute(
           'SELECT Users.userID, Users.username, Users.name, SectionMembers.sectionID, Sections.name AS section FROM Users '
           + 'JOIN SectionMembers ON Users.userID=SectionMembers.userID '

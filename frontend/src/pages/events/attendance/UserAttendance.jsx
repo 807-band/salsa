@@ -3,14 +3,13 @@ import { useParams } from 'react-router';
 import { Card, ListGroup } from 'react-bootstrap';
 import { getAttendanceByUser } from '../../../lib/attendance';
 import { getUser } from '../../../lib/users';
-import { getEvents } from '../../../lib/events';
-import { getGroupsByUser } from '../../../lib/groups';
+import { getEventMembers, getEvents } from '../../../lib/events';
 
 const UserAttendance = () => {
   const userID = useParams().id;
   const [user, setUser] = useState(null);
   const [attendance, setAttendance] = useState(null);
-  const [events, setEvents] = useState(null);
+  const [memberEvents, setMemberEvents] = useState(null);
   const now = new Date().toISOString();
 
   useEffect(() => {
@@ -19,22 +18,28 @@ const UserAttendance = () => {
   }, []);
 
   useEffect(() => {
-    getEvents().then(async (res) => {
+    getEvents().then(async (evs) => {
       if (!user) return;
-      const userGroups = await getGroupsByUser(user.userID);
-      // get only events that are required for this user
-      const userEvents = res.filter((e) => e.groupID === null
-        || userGroups.find((g) => g.groupID === e.groupID));
-      userEvents.sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
-      setEvents(userEvents);
+      computeMemberEvents(evs).then((res) => setMemberEvents(res));
     });
   }, [user]);
 
-  return user && events && (
+  const computeMemberEvents = async (evs) => {
+    const temp = await Promise.all(evs.map(async (e) => {
+      const eventMembers = await getEventMembers(e.eventID);
+      if (eventMembers.find((m) => m.userID === parseInt(userID, 10)) !== undefined) {
+        return e;
+      }
+      return null;
+    }));
+    return temp.filter((e) => e !== null);
+  };
+
+  return user && memberEvents && (
     <>
       <h1>{`Attendance: ${user.name}`}</h1>
-      <EventCard title="upcoming events" events={events.filter((e) => e.startTime >= now)} attendance={attendance} />
-      <EventCard title="past events" events={events.filter((e) => e.startTime < now)} attendance={attendance} />
+      <EventCard title="upcoming events" events={memberEvents.filter((e) => e.startTime >= now)} attendance={attendance} userID={userID} />
+      <EventCard title="past events" events={memberEvents.filter((e) => e.startTime < now)} attendance={attendance} userID={userID} />
     </>
   );
 };
@@ -48,7 +53,9 @@ const evalTardy = (timeArrived, tardyTime) => {
   return false;
 };
 
-const EventCard = ({ title, events, attendance }) => (
+const EventCard = ({
+  title, events, attendance,
+}) => (
   <Card>
     <Card.Header>{title}</Card.Header>
     <ListGroup>

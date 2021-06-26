@@ -70,6 +70,7 @@ const Event = ({ isAdmin }) => {
         setSubbing={setSubbing}
         possibleSubs={possibleSubs}
         setPossibleSubs={setPossibleSubs}
+        group={group}
       />
       <br />
       <hr />
@@ -82,7 +83,7 @@ const Event = ({ isAdmin }) => {
             <Form.File.Label>
               {currFile ? currFile.name : 'Choose a file'}
             </Form.File.Label>
-            <Form.Control.Feedback type="valid">{message}</Form.Control.Feedback>
+            <Form.Control.Feedback type="valid">Success! Refresh to view changes.</Form.Control.Feedback>
             <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
           </Form.File>
         </Form.Group>
@@ -156,7 +157,8 @@ const RemoveSubForm = ({ eventID, oldUserID }) => (
 );
 
 const Attendance = ({
-  eventID, attendance, eventMembers, tardyTime, subbing, setSubbing, possibleSubs, setPossibleSubs,
+  eventID, attendance, eventMembers, tardyTime, subbing,
+  setSubbing, possibleSubs, setPossibleSubs, group,
 }) => {
   // best effort at sorting by lastname, since full name is all in one attribute
   eventMembers.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
@@ -184,21 +186,24 @@ const Attendance = ({
                         ? <small>{`TARDY -- arrived: ${userAttendance.timeArrived}`}</small>
                         : <small>{`ON TIME -- arrived: ${userAttendance.timeArrived}`}</small>}
                     </Col>
-                    <Col sm={4} md={3} xl={2}>
-                      {user.oldUserID
-                        ? <RemoveSubForm eventID={eventID} oldUserID={user.oldUserID} />
-                        : (
-                          <SubForm
-                            eventID={eventID}
-                            oldUserID={user.userID}
-                            subbing={subbing}
-                            setSubbing={setSubbing}
-                            eventMembers={eventMembers}
-                            possibleSubs={possibleSubs}
-                            setPossibleSubs={setPossibleSubs}
-                          />
-                        )}
-                    </Col>
+                    {group !== 'Whole Band'
+                    && (
+                      <Col sm={4} md={3} xl={2}>
+                        {user.oldUserID
+                          ? <RemoveSubForm eventID={eventID} oldUserID={user.oldUserID} />
+                          : (
+                            <SubForm
+                              eventID={eventID}
+                              oldUserID={user.userID}
+                              subbing={subbing}
+                              setSubbing={setSubbing}
+                              eventMembers={eventMembers}
+                              possibleSubs={possibleSubs}
+                              setPossibleSubs={setPossibleSubs}
+                            />
+                          )}
+                      </Col>
+                    )}
                   </Row>
                 </ListGroup.Item>
               );
@@ -216,21 +221,24 @@ const Attendance = ({
                   {attendance.length > 0
                     && <small>ABSENT</small>}
                 </Col>
-                <Col sm={4} md={3} xl={2}>
-                  {user.oldUserID
-                    ? <RemoveSubForm eventID={eventID} oldUserID={user.oldUserID} />
-                    : (
-                      <SubForm
-                        eventID={eventID}
-                        oldUserID={user.userID}
-                        subbing={subbing}
-                        setSubbing={setSubbing}
-                        eventMembers={eventMembers}
-                        possibleSubs={possibleSubs}
-                        setPossibleSubs={setPossibleSubs}
-                      />
-                    )}
-                </Col>
+                {group !== 'Whole Band'
+                && (
+                  <Col sm={4} md={3} xl={2}>
+                    {user.oldUserID
+                      ? <RemoveSubForm eventID={eventID} oldUserID={user.oldUserID} />
+                      : (
+                        <SubForm
+                          eventID={eventID}
+                          oldUserID={user.userID}
+                          subbing={subbing}
+                          setSubbing={setSubbing}
+                          eventMembers={eventMembers}
+                          possibleSubs={possibleSubs}
+                          setPossibleSubs={setPossibleSubs}
+                        />
+                      )}
+                  </Col>
+                )}
               </Row>
             </ListGroup.Item>
           );
