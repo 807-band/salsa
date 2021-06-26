@@ -34,6 +34,8 @@ import EditGroup from './pages/events/groups/group/Edit';
 import Attendance from './pages/events/Attendance';
 import UserAttendance from './pages/events/attendance/UserAttendance';
 
+import cpmb from './images/cpmb.jpeg';
+
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
   const [isEval, setEval] = useState(false);
@@ -67,7 +69,7 @@ const App = () => {
               <Col className="site-content">
                 <Switch>
                   <Route exact path="/">
-                    <h1>hi 807.band!</h1>
+                    <img src={cpmb} alt="Cal Poly Mustang Band" />
                   </Route>
 
                   <Route exact path="/events">
