@@ -13,7 +13,7 @@ const sendEmail = async (csv, title) => {
     secure: true,
   });
   const mailData = {
-    to: 'booce3@gmail.com, bryce.collard@gmail.com',
+    to: process.env.RECIEVES_ATTENDANCE_UPDATES,
     subject: 'Attendance updates',
     html: `<b>Attendance updates:</b><br> New attendance uploaded for event: ${title}<br/>`,
     attachments: [{ filename: 'attendance.csv', content: csv }],
@@ -28,15 +28,20 @@ const sendEmail = async (csv, title) => {
 const parseAttendance = (eventID, csv) => {
   const lines = csv.split('\n');
   const headers = lines[0].split(',').map((h) => h.trim().toLowerCase());
+  const timeArrivedIndex = headers.indexOf('time');
+  const aliasIndex = headers.indexOf('cp alias');
   const body = lines.slice(1);
+  if (timeArrivedIndex === -1 || aliasIndex === -1) {
+    return 0;
+  }
   body.forEach((entry) => {
     if (entry === '') {
       return;
     }
     const parts = entry.split(',').map((p) => p.trim());
 
-    const timeArrived = parts[headers.indexOf('time')];
-    const alias = parts[headers.indexOf('cp alias')];
+    const timeArrived = parts[timeArrivedIndex];
+    const alias = parts[aliasIndex];
 
     if (!alias) {
       return;
@@ -49,13 +54,14 @@ const parseAttendance = (eventID, csv) => {
         }
       });
   });
+  return 1;
 };
 
 module.exports.putAttendance = async (req, res) => {
   if (!req.file || req.file.mimetype !== 'text/csv' || req.file.originalname.slice(-3) !== 'csv') {
     res.send({
       success: false,
-      message: 'Please submit a csv file for attendance // Format: First,Last,Section,CP Alias,Time',
+      message: 'Please submit a csv file for attendance with attributes CP Alias and time',
     });
   } else {
     const eventID = req.params.id;
@@ -64,16 +70,22 @@ module.exports.putAttendance = async (req, res) => {
     // delete old attendance for this event
     db.execute('DELETE FROM Attendance WHERE eventID=?', [eventID],
       () => {
-        parseAttendance(eventID, csv);
-        db.execute('SELECT title from Events WHERE eventID=?', [eventID],
-          (err, results) => {
-            sendEmail(csv, results[0].title);
+        if (parseAttendance(eventID, csv)) {
+          db.execute('SELECT title from Events WHERE eventID=?', [eventID],
+            (err, results) => {
+              sendEmail(csv, results[0].title);
+              res.send({
+                success: true,
+                message: 'Success',
+                fileName: req.file.originalname,
+              });
+            });
+        } else {
+          res.send({
+            success: false,
+            message: 'Please submit a csv file for attendance with attributes CP Alias and time',
           });
+        }
       });
-    res.send({
-      success: true,
-      message: 'Success',
-      fileName: req.file.originalname,
-    });
   }
 };

@@ -75,7 +75,8 @@ const Event = ({ isAdmin }) => {
       <br />
       <hr />
       <br />
-      Upload attendance
+      Upload attendance (this overrides current attendance, and the email list will be notified!)
+      <br />
       <Form onSubmit={submitAttendance(event.eventID, currFile, setMessage)}>
         <Form.Group controlId="file" onChange={(e) => setCurrFile(e.target.files[0])}>
           <Form.File id="formcheck-api-custom" custom>
