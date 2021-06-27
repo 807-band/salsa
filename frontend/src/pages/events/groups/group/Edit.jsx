@@ -7,6 +7,7 @@ import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup, getGroupMembers } from '../../../../lib/groups';
 import getSections from '../../../../lib/sections';
 import { getUsers } from '../../../../lib/users';
+import groupByProp from '../../../../lib/util';
 
 const CreateGroup = () => {
   const [users, setUsers] = useState(null);
@@ -93,16 +94,6 @@ const handleSubmit = (groupID, newGroupMembers, setRedirect) => async (event) =>
   event.preventDefault();
   await editGroup(groupID, form.name.value, Array.from(newGroupMembers));
   setRedirect(`/events/groups/${groupID}`);
-};
-
-const groupByProp = (xs, prop) => {
-  const grouped = {};
-  for (let i = 0; i < xs.length; i += 1) {
-    const p = xs[i][prop];
-    if (!grouped[p]) { grouped[p] = []; }
-    grouped[p].push(xs[i]);
-  }
-  return grouped;
 };
 
 const doCheckUser = (userID, newGroupMembers, setNewGroupMembers) => {

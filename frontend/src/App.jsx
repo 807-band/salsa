@@ -31,6 +31,10 @@ import SignInPage from './SignInPage';
 import Event from './pages/events/Event';
 import EditEvent from './pages/events/event/Edit';
 import EditGroup from './pages/events/groups/group/Edit';
+import Attendance from './pages/events/Attendance';
+import UserAttendance from './pages/events/attendance/UserAttendance';
+
+import cpmb from './images/cpmb.jpeg';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -65,7 +69,7 @@ const App = () => {
               <Col className="site-content">
                 <Switch>
                   <Route exact path="/">
-                    <h1>hi 807.band!</h1>
+                    <img src={cpmb} alt="Cal Poly Mustang Band" />
                   </Route>
 
                   <Route exact path="/events">
@@ -76,6 +80,12 @@ const App = () => {
                   </Route>
                   <Route exact path="/events/groups">
                     {isAdmin && <Groups />}
+                  </Route>
+                  <Route exact path="/events/attendance">
+                    {isAdmin && <Attendance />}
+                  </Route>
+                  <Route exact path="/events/attendance/:id">
+                    {isAdmin && <UserAttendance />}
                   </Route>
                   <Route exact path="/events/groups/create">
                     {isAdmin && <CreateGroup />}

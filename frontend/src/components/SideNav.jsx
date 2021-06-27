@@ -19,6 +19,9 @@ const SideNav = ({ isAdmin, isEval }) => (
           <Link to="/events/groups" className={styles.childPage}>
             Groups
           </Link>
+          <Link to="/events/attendance" className={styles.childPage}>
+            Attendance
+          </Link>
         </>
       )}
     <Link to="/stations" className={styles.parentPage}>

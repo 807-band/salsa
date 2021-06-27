@@ -3,6 +3,7 @@ import { Card, ListGroup, Button } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { getGroupMembers } from '../../../lib/groups';
 import getSections from '../../../lib/sections';
+import groupByProp from '../../../lib/util';
 
 const Group = () => {
   const [members, setMembers] = useState(null);
@@ -28,16 +29,6 @@ const Group = () => {
   );
 };
 
-const groupByProp = (xs, prop) => {
-  const grouped = {};
-  for (let i = 0; i < xs.length; i += 1) {
-    const p = xs[i][prop];
-    if (!grouped[p]) { grouped[p] = []; }
-    grouped[p].push(xs[i]);
-  }
-  return grouped;
-};
-
 const SectionCards = ({ users, sections }) => {
   const groupedUsers = groupByProp(users, 'sectionID');
   return sections.map((section) => (
@@ -46,7 +37,7 @@ const SectionCards = ({ users, sections }) => {
       <ListGroup>
         {groupedUsers[section.sectionID] && groupedUsers[section.sectionID].map((user) => (
           <ListGroup.Item className="card-item" key={user.userID}>
-            {user.memberName}
+            {user.name}
           </ListGroup.Item>
         ))}
       </ListGroup>

@@ -5,6 +5,7 @@ import {
 import { createGroup } from '../../../lib/groups';
 import getSections from '../../../lib/sections';
 import { getUsers } from '../../../lib/users';
+import groupByProp from '../../../lib/util';
 
 const CreateGroup = () => {
   const [users, setUsers] = useState(null);
@@ -46,16 +47,6 @@ const CreateGroup = () => {
 const handleSubmit = (newGroupMembers) => async (event) => {
   const form = event.currentTarget;
   await createGroup(form.name.value, Array.from(newGroupMembers));
-};
-
-const groupByProp = (xs, prop) => {
-  const grouped = {};
-  for (let i = 0; i < xs.length; i += 1) {
-    const p = xs[i][prop];
-    if (!grouped[p]) { grouped[p] = []; }
-    grouped[p].push(xs[i]);
-  }
-  return grouped;
 };
 
 const doCheckUser = (userID, newGroupMembers, setNewGroupMembers) => {
