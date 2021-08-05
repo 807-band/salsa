@@ -7,9 +7,11 @@
 
 # testing
 /coverage
+/test
 
 # production
 /build
+/.cert
 
 # misc
 .DS_Store
