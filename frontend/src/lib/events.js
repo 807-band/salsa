@@ -5,7 +5,7 @@ import axios from 'axios';
  */
 
 export async function postEvent(title, startTime, tardyTime, groupID) {
-  await axios.post(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event`, {
+  await axios.post(`${process.env.REACT_APP_SERVERDOM}:3001/api/event`, {
     title,
     startTime,
     tardyTime,
@@ -14,7 +14,7 @@ export async function postEvent(title, startTime, tardyTime, groupID) {
 }
 
 export async function putEvent(id, title, startTime, tardyTime, groupID) {
-  await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`, {
+  await axios.put(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`, {
     title,
     startTime,
     tardyTime,
@@ -23,25 +23,25 @@ export async function putEvent(id, title, startTime, tardyTime, groupID) {
 }
 
 export async function deleteEvent(id) {
-  await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
+  await axios.delete(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
 }
 
 export async function postSub(id, oldUserID, newUserID) {
-  await axios.post(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub`, {
+  await axios.post(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub`, {
     oldUserID,
     newUserID,
   });
 }
 
 export async function putSub(id, oldUserID, newUserID) {
-  await axios.put(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub`, {
+  await axios.put(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub`, {
     oldUserID,
     newUserID,
   });
 }
 
 export async function deleteSub(id, oldUserID) {
-  await axios.delete(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub/${oldUserID}`);
+  await axios.delete(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/sub/${oldUserID}`);
 }
 
 /**
@@ -49,16 +49,16 @@ export async function deleteSub(id, oldUserID) {
  */
 
 export async function getEvents() {
-  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event`);
+  const res = await axios.get(`${process.env.REACT_APP_SERVERDOM}:3001/api/event`);
   return res.data;
 }
 
 export async function getEvent(id) {
-  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
+  const res = await axios.get(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}`);
   return res.data;
 }
 
 export async function getEventMembers(id) {
-  const res = await axios.get(`http://${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/members`);
+  const res = await axios.get(`${process.env.REACT_APP_SERVERDOM}:3001/api/event/${id}/members`);
   return res.data;
 }
