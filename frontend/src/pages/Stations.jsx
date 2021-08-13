@@ -9,8 +9,6 @@ const Stations = ({ isAdmin }) => {
     getStations().then((s) => setStations(s));
   }, []);
 
-  console.log(stations);
-
   return (
     <>
       <h1>
