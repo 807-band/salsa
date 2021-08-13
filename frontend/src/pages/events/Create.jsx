@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { Redirect } from 'react-router';
 import { postEvent } from '../../lib/events';
 import { getGroupNames } from '../../lib/groups';
 
 const CreateEvent = () => {
   const [validated, setValidated] = useState(false);
   const [groups, setGroups] = useState([]);
+  const [formState, setFormState] = useState(false);
 
   useEffect(() => {
     getGroupNames().then((res) => setGroups(res));
   }, []);
 
   const handleSubmit = async (event) => {
+    setFormState('clicked');
     const form = event.currentTarget;
+    event.preventDefault();
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setFormState(false);
       setValidated(true);
     } else {
       const startTimeString = `${form.startDate.value} ${form.startTime.value}.00`;
@@ -24,12 +28,14 @@ const CreateEvent = () => {
       await postEvent(
         form.title.value, startTimeString, tardyTimeString, group ? group.groupID : null,
       );
+      setFormState('submitted');
       setValidated(true);
     }
   };
 
   return (
     <>
+      {formState === 'submitted' ? <Redirect push to="/events" /> : null}
       <h1>
         Create Event
       </h1>
@@ -69,7 +75,7 @@ const CreateEvent = () => {
           </Form.Control>
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={formState}>
           Submit
         </Button>
       </Form>

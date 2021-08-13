@@ -5,8 +5,6 @@ import axios from 'axios';
  */
 
 export async function postStation(title, description, rank) {
-  console.log(`posting station to ${process.env.REACT_APP_SERVERDOM}:3001/api/station`);
-  console.log(title, description, rank);
   await axios.post(`${process.env.REACT_APP_SERVERDOM}:3001/api/station`, {
     title,
     description,
