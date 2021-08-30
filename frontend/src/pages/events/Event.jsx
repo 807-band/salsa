@@ -105,14 +105,15 @@ const evalTardy = (timeArrived, tardyTime) => {
   return false;
 };
 
-const getPossibleSubs = async (eventMembers) => {
+const getPossibleSubs = async (eventMembers, section) => {
   // get all members
   const allMembers = await getUsers();
   // remove members that are already attending
   const possibleSubs = allMembers.filter(
     (m) => !eventMembers.some((em) => em.userID === m.userID),
   );
-  return possibleSubs;
+  // subs should be in the same section...
+  return possibleSubs.filter((ps) => ps.section === section);
 };
 
 const submitSub = (eventID, oldUserID, possibleSubs) => (event) => {
@@ -121,16 +122,16 @@ const submitSub = (eventID, oldUserID, possibleSubs) => (event) => {
 };
 
 const SubForm = ({
-  eventID, oldUserID, subbing, setSubbing, eventMembers, possibleSubs, setPossibleSubs,
+  eventID, oldUserID, subbing, setSubbing, eventMembers, possibleSubs, setPossibleSubs, section,
 }) => {
   if (subbing !== oldUserID) {
     return (
-      <Button onClick={() => setSubbing(oldUserID)}>
+      <Button className="edit-button" onClick={() => setSubbing(oldUserID)}>
         Substitute
       </Button>
     );
   }
-  if (!possibleSubs) getPossibleSubs(eventMembers).then((ps) => setPossibleSubs(ps));
+  if (!possibleSubs) getPossibleSubs(eventMembers, section).then((ps) => setPossibleSubs(ps));
   if (!possibleSubs || possibleSubs.length === 0) {
     return <>no available subs</>;
   }
@@ -142,7 +143,7 @@ const SubForm = ({
             .map((s) => <option key={s.userID}>{s.name}</option>)}
         </Form.Control>
       </Form.Group>
-      <Button type="submit">
+      <Button className="edit-button" type="submit">
         Confirm
       </Button>
     </Form>
@@ -151,7 +152,7 @@ const SubForm = ({
 
 const RemoveSubForm = ({ eventID, oldUserID }) => (
   <Form onSubmit={() => deleteSub(eventID, oldUserID)}>
-    <Button type="submit">
+    <Button className="edit-button" type="submit">
       Remove Sub
     </Button>
   </Form>
@@ -201,6 +202,7 @@ const Attendance = ({
                               eventMembers={eventMembers}
                               possibleSubs={possibleSubs}
                               setPossibleSubs={setPossibleSubs}
+                              section={section}
                             />
                           )}
                       </Col>
@@ -236,6 +238,7 @@ const Attendance = ({
                           eventMembers={eventMembers}
                           possibleSubs={possibleSubs}
                           setPossibleSubs={setPossibleSubs}
+                          section={section}
                         />
                       )}
                   </Col>
