@@ -162,8 +162,7 @@ const Attendance = ({
   eventID, attendance, eventMembers, tardyTime, subbing,
   setSubbing, possibleSubs, setPossibleSubs, group,
 }) => {
-  // best effort at sorting by lastname, since full name is all in one attribute
-  eventMembers.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
+  eventMembers.sort((a, b) => (a.name > b.name ? 1 : -1));
   const attendanceBySection = groupByProp(attendance, 'section');
   const eventMembersBySection = groupByProp(eventMembers, 'section');
   return Object.keys(eventMembersBySection).map((section) => (

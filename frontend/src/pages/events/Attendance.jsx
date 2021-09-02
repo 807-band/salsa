@@ -29,8 +29,7 @@ const Attendance = () => {
 };
 
 const SectionCards = ({ users, sections }) => {
-  // best effort at sorting by lastname, since full name is all in one attribute
-  users.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
+  users.sort((a, b) => (a.name > b.name ? 1 : -1));
   const groupedUsers = groupByProp(users, 'sectionID');
   return sections.map((section) => (
     <Card key={section.sectionID}>
