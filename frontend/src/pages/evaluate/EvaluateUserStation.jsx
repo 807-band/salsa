@@ -7,8 +7,9 @@ import { Redirect } from 'react-router-dom';
 import { getUser } from '../../lib/users';
 import { getStationData } from '../../lib/stations';
 import { submitEvaluation } from '../../lib/evaluations';
+import { canEval } from '../../lib/util';
 
-const EvaluateUserStation = ({ evaluator }) => {
+const EvaluateUserStation = ({ evaluator, evalStatus }) => {
   const uID = useParams().uid;
   const sID = useParams().sid;
   const [user, setUser] = useState(null);
@@ -33,6 +34,8 @@ const EvaluateUserStation = ({ evaluator }) => {
   }, [station]);
 
   if (!user || !station) return 'loading. . .';
+
+  if (!canEval(station.class, station.level, evalStatus)) { return null; }
 
   return (
     <>

@@ -2,7 +2,7 @@ import { Card, ListGroup } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { getUsers } from '../../lib/users';
 import getSections from '../../lib/sections';
-import groupByProp from '../../lib/util';
+import { groupByProp } from '../../lib/util';
 
 const Attendance = () => {
   const [users, setUsers] = useState([]);

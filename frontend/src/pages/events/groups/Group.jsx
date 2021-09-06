@@ -3,7 +3,7 @@ import { Card, ListGroup, Button } from 'react-bootstrap';
 import { useParams } from 'react-router';
 import { getGroupMembers } from '../../../lib/groups';
 import getSections from '../../../lib/sections';
-import groupByProp from '../../../lib/util';
+import { groupByProp } from '../../../lib/util';
 
 const Group = () => {
   const [members, setMembers] = useState(null);

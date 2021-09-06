@@ -38,7 +38,7 @@ import cpmb from './images/cpmb.jpeg';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
-  const [isEval, setEval] = useState(false);
+  const [evalStatus, setEval] = useState(false);
   const { accounts } = useMsal();
   const [user, setUser] = useState(null);
 
@@ -49,7 +49,11 @@ const App = () => {
         setUser(res);
         getPermissions(res.userID).then((perms) => {
           setAdmin(perms.includes('admin'));
-          setEval(perms.includes('admin') || perms.includes('eval'));
+          if (perms.includes('admin') || perms.includes('eval')) {
+            setEval('eval');
+          } else if (perms.includes('eval-1-2')) {
+            setEval('eval-1-2');
+          } else if (perms.includes('eval-3-6')) { setEval('eval-3-6'); }
         });
       });
     }
@@ -59,11 +63,11 @@ const App = () => {
     <>
       <AuthenticatedTemplate>
         <BrowserRouter>
-          <Header isEval={isEval} />
+          <Header isEval={evalStatus} />
           <Container fluid>
             <Row className="site">
               <Col sm={4} md={3} xl={2} className="side-nav">
-                <SideNav isAdmin={isAdmin} isEval={isEval} />
+                <SideNav isAdmin={isAdmin} isEval={evalStatus} />
               </Col>
 
               <Col className="site-content">
@@ -137,17 +141,17 @@ const App = () => {
                   </Route>
 
                   <Route exact path="/evaluate">
-                    {isEval && <Evaluate />}
+                    {evalStatus && <Evaluate />}
                   </Route>
                   <Route exact path="/evaluate/:uid">
-                    {isEval && <EvaluateUser />}
+                    {evalStatus && <EvaluateUser evalStatus={evalStatus} />}
                   </Route>
                   <Route exact path="/evaluate/:uid/:sid">
-                    {isEval && <EvaluateUserStation evaluator={user} />}
+                    {evalStatus && <EvaluateUserStation evaluator={user} evalStatus={evalStatus} />}
                   </Route>
 
                   <Route exact path="/overview">
-                    {isEval && <Overview />}
+                    {evalStatus && <Overview />}
                   </Route>
 
                   <Route exact path="/profile">
