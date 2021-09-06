@@ -165,9 +165,15 @@ const Attendance = ({
   eventMembers.sort((a, b) => (a.name > b.name ? 1 : -1));
   const attendanceBySection = groupByProp(attendance, 'section');
   const eventMembersBySection = groupByProp(eventMembers, 'section');
+  // TODO: conditionally show the 'take attendance' button
   return Object.keys(eventMembersBySection).map((section) => (
     <Card key={section}>
-      <Card.Header className="card-header">{section}</Card.Header>
+      <Card.Header className="card-header">
+        {section}
+        <Link to={{ pathname: `/events/${eventID}/${section}`, state: { members: eventMembersBySection[section], attendance: attendanceBySection[section], isSubmitted: attendance.length > 0 } }}>
+          <Button className="edit-button">Take Attendance</Button>
+        </Link>
+      </Card.Header>
       <ListGroup>
         {eventMembersBySection[section].map((user) => {
           if (attendanceBySection[section]) {

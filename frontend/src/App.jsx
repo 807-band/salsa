@@ -35,6 +35,7 @@ import Attendance from './pages/events/Attendance';
 import UserAttendance from './pages/events/attendance/UserAttendance';
 
 import cpmb from './images/cpmb.jpeg';
+import SectionAttendance from './pages/events/event/Section';
 
 const App = () => {
   const [isAdmin, setAdmin] = useState(false);
@@ -101,6 +102,9 @@ const App = () => {
                   </Route>
                   <Route exact path="/events/:id/edit">
                     {isAdmin && <EditEvent />}
+                  </Route>
+                  <Route exact path="/events/:id/:section">
+                    {isAdmin && <SectionAttendance />}
                   </Route>
 
                   <Route exact path="/stations">
