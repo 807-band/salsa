@@ -8,7 +8,7 @@ import {
 } from '../../lib/events';
 import { putAttendance, getAttendanceByEvent } from '../../lib/attendance';
 import { getGroupMembers } from '../../lib/groups';
-import groupByProp from '../../lib/util';
+import { groupByProp } from '../../lib/util';
 import { getUsers } from '../../lib/users';
 
 const Event = ({ isAdmin }) => {

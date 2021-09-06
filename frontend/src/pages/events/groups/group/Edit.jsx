@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup, getGroupMembers } from '../../../../lib/groups';
 import getSections from '../../../../lib/sections';
 import { getUsers } from '../../../../lib/users';
-import groupByProp from '../../../../lib/util';
+import { groupByProp } from '../../../../lib/util';
 
 const CreateGroup = () => {
   const [users, setUsers] = useState(null);
