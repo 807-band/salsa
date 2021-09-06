@@ -2,25 +2,31 @@
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import React, { useState } from 'react';
+import { Redirect } from 'react-router';
 import { postStation } from '../../lib/stations';
 
 const CreateStation = () => {
   const [validated, setValidated] = useState(false);
+  const [formState, setFormState] = useState(false);
 
   const handleSubmit = async (event) => {
+    setFormState('clicked');
     const form = event.currentTarget;
+    event.preventDefault();
     if (form.checkValidity() === false) {
-      event.preventDefault();
       event.stopPropagation();
+      setFormState(false);
       setValidated(true);
     } else {
       await postStation(form.title.value, form.description.value, form.rank.value === 'beginner' ? 0 : 1);
+      setFormState('submitted');
       setValidated(true);
     }
   };
 
   return (
     <>
+      {formState === 'submitted' ? <Redirect push to="/stations" /> : null}
       <h1>
         Create Station
       </h1>
@@ -46,7 +52,7 @@ const CreateStation = () => {
           </Form.Control>
         </Form.Group>
 
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled={formState}>
           Submit
         </Button>
       </Form>

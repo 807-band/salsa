@@ -5,5 +5,8 @@
 # node stuffs
 node_modules/
 
+# singe-use sql scripts
+tempSQLscripts/
+
 # environment variables
 .env

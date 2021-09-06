@@ -17,7 +17,7 @@ const Events = () => {
     <>
       <h1>Events</h1>
       <EventCard title="upcoming events" events={events.filter((e) => e.startTime >= now)} />
-      <EventCard title="past events" events={events.filter((e) => e.startTime < now)} />
+      <EventCard title="past events" events={events.filter((e) => e.startTime < now).sort((a, b) => new Date(b.startTime) - new Date(a.startTime))} />
     </>
   );
 };

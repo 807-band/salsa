@@ -2,7 +2,7 @@ import { Card, ListGroup } from 'react-bootstrap';
 import React, { useState, useEffect } from 'react';
 import { getUsers } from '../lib/users';
 import getSections from '../lib/sections';
-import groupByProp from '../lib/util';
+import { groupByProp } from '../lib/util';
 
 const Evaluate = () => {
   const [users, setUsers] = useState([]);
@@ -29,8 +29,7 @@ const Evaluate = () => {
 };
 
 const SectionCards = ({ users, sections }) => {
-  // best effort at sorting by lastname, since full name is all in one attribute
-  users.sort((a, b) => (a.name.split(' ').pop() > b.name.split(' ').pop() ? 1 : -1));
+  users.sort((a, b) => (a.name > b.name ? 1 : -1));
   const groupedUsers = groupByProp(users, 'sectionID');
   return sections.map((section) => (
     <Card key={section.sectionID}>
