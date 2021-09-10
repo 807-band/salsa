@@ -56,42 +56,47 @@ const Event = ({ isAdmin }) => {
       {`Tardy Time: ${new Date(event.tardyTime).toLocaleTimeString().replace(/:\d\d /, ' ')}`}
       <br />
       {`Group to attend: ${group}`}
-      <br />
-      <br />
-      <hr />
-      <br />
-      <h1>Attendance</h1>
-      <Attendance
-        eventID={event.eventID}
-        attendance={attendance}
-        eventMembers={eventMembers}
-        tardyTime={event.tardyTime}
-        subbing={subbing}
-        setSubbing={setSubbing}
-        possibleSubs={possibleSubs}
-        setPossibleSubs={setPossibleSubs}
-        group={group}
-      />
-      <br />
-      <hr />
-      <br />
-      Upload attendance (this overrides current attendance, and the email list will be notified!)
-      <br />
-      <Form onSubmit={submitAttendance(event.eventID, currFile, setMessage)}>
-        <Form.Group controlId="file" onChange={(e) => setCurrFile(e.target.files[0])}>
-          <Form.File id="formcheck-api-custom" custom>
-            <Form.File.Input isValid={message === 'Success'} isInvalid={message !== 'Success' && message !== null} />
-            <Form.File.Label>
-              {currFile ? currFile.name : 'Choose a file'}
-            </Form.File.Label>
-            <Form.Control.Feedback type="valid">Success! Refresh to view changes.</Form.Control.Feedback>
-            <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
-          </Form.File>
-        </Form.Group>
-        <Button type="submit">
-          Submit
-        </Button>
-      </Form>
+      {isAdmin && (
+        <>
+          <br />
+          <br />
+          <hr />
+          <br />
+          <h1>Attendance</h1>
+          <Attendance
+            eventID={event.eventID}
+            attendance={attendance}
+            eventMembers={eventMembers}
+            tardyTime={event.tardyTime}
+            subbing={subbing}
+            setSubbing={setSubbing}
+            possibleSubs={possibleSubs}
+            setPossibleSubs={setPossibleSubs}
+            group={group}
+          />
+          <br />
+          <hr />
+          <br />
+          Upload attendance (this overrides current attendance,
+          and the email list will be notified!)
+          <br />
+          <Form onSubmit={submitAttendance(event.eventID, currFile, setMessage)}>
+            <Form.Group controlId="file" onChange={(e) => setCurrFile(e.target.files[0])}>
+              <Form.File id="formcheck-api-custom" custom>
+                <Form.File.Input isValid={message === 'Success'} isInvalid={message !== 'Success' && message !== null} />
+                <Form.File.Label>
+                  {currFile ? currFile.name : 'Choose a file'}
+                </Form.File.Label>
+                <Form.Control.Feedback type="valid">Success! Refresh to view changes.</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">{message}</Form.Control.Feedback>
+              </Form.File>
+            </Form.Group>
+            <Button type="submit">
+              Submit
+            </Button>
+          </Form>
+        </>
+      )}
     </>
   );
 };

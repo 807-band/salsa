@@ -4,6 +4,7 @@ import { Container, Col, Row } from 'react-bootstrap';
 import {
   AuthenticatedTemplate, UnauthenticatedTemplate, useMsal,
 } from '@azure/msal-react';
+import { isMobile } from 'react-device-detect';
 import Header from './components/Header';
 import SideNav from './components/SideNav';
 import Stations from './pages/Stations';
@@ -73,7 +74,7 @@ const App = () => {
               <Col className="site-content">
                 <Switch>
                   <Route exact path="/">
-                    <img src={cpmb} alt="Cal Poly Mustang Band" />
+                    {isMobile ? <SideNav isAdmin={isAdmin} isEval={evalStatus} /> : <img src={cpmb} alt="Cal Poly Mustang Band" />}
                   </Route>
 
                   <Route exact path="/events">
