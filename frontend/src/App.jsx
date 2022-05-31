@@ -45,7 +45,7 @@ const App = () => {
 
   useEffect(async () => {
     if (accounts[0]) {
-      // get username from email address
+      // get username from email address.
       getUserByUsername(accounts[0].username.split('@')[0]).then((res) => {
         setUser(res);
         getPermissions(res.userID).then((perms) => {
