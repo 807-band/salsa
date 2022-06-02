@@ -20,3 +20,8 @@ module.exports.addInfoCard = async (req, res) => {
       res.jsonp({ packetID: results.insertId, content: '' });
     });
 };
+
+module.exports.deleteInfoCard = async (req, res) => {
+  db.execute('DELETE FROM StationPacket WHERE packetID=?', [req.params.packetid]);
+  res.end();
+};

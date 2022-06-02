@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import { createInfoTab, putInformation } from '../lib/stations';
+import { createInfoTab, deleteInfoTab, putInformation } from '../lib/stations';
 
 const StationInfo = ({ id, pageData, isAdmin }) => {
   const [editing, setEditing] = useState(false);
@@ -42,7 +42,7 @@ const StationInfo = ({ id, pageData, isAdmin }) => {
         Done Editing
       </Button>
       <br />
-      <div id="info-cards">{content.map((c) => <EditCard key={c.packetID} c={c} content={content} setContent={setContent} id={id} />)}</div>
+      <div id="info-cards">{content.map((c) => <EditCard key={c.packetID} numCards={content.length} c={c} content={content} setContent={setContent} id={id} />)}</div>
       <br />
       <Button onClick={() => addCard(content, setContent, id)}>Add Card</Button>
     </>
@@ -50,7 +50,7 @@ const StationInfo = ({ id, pageData, isAdmin }) => {
 };
 
 const EditCard = ({
-  c, content, setContent, id,
+  c, numCards, content, setContent, id,
 }) => (
   <Form onSubmit={saveInfo(content, setContent, id)} info-key={c.packetID} key={c.packetID}>
     <Card>
@@ -61,7 +61,8 @@ const EditCard = ({
         </Card.Text>
       </Card.Body>
     </Card>
-    <Button type="submit">Save</Button>
+    <Button type="submit">Save Card</Button>
+    {numCards > 1 && <Button variant="danger" onClick={() => deleteCard(c.packetID, content, setContent)}>Delete Card</Button>}
   </Form>
 );
 
@@ -72,6 +73,11 @@ const addCard = async (content, setContent, id) => {
 
   const cardInfo = await createInfoTab(id, role, info);
   setContent([...content, cardInfo]);
+};
+
+const deleteCard = (packetID, content, setContent) => {
+  deleteInfoTab(packetID);
+  setContent(content.filter((c) => c.packetID !== packetID));
 };
 
 const saveInfo = (content, setContent, id) => (event) => {
