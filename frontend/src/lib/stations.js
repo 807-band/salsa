@@ -101,6 +101,11 @@ export async function createInfoTab(id, role, info) {
   return res.data;
 }
 
+export async function deleteInfoTab(packetID) {
+  const res = await axios.delete(`${process.env.REACT_APP_SERVERDOM}:3001/api/station/info/${packetID}`);
+  return res.data;
+}
+
 export async function putInformation(sid, iid, text) {
   await axios.put(`${process.env.REACT_APP_SERVERDOM}:3001/api/station/${sid}/info/${iid}`, {
     text,
