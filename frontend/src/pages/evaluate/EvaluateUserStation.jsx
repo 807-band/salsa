@@ -16,6 +16,7 @@ const EvaluateUserStation = ({ evaluator, evalStatus }) => {
   const [station, setStation] = useState(null);
   const [switchMap, setSwitchMap] = useState({});
   const [redirect, setRedirect] = useState(false);
+  const [disableButton, setDisableButton] = useState(false);
 
   useEffect(() => {
     getUser(uID).then((res) => setUser(res));
@@ -51,15 +52,20 @@ const EvaluateUserStation = ({ evaluator, evalStatus }) => {
         uID={uID}
         sID={sID}
         evalID={evaluator.userID}
+        setDisableButton={setDisableButton}
+        disableButton={disableButton}
       />
     </>
   );
 };
 
 const EvaluationForm = ({
-  station, switchMap, setSwitchMap, setRedirect, uID, sID, evalID,
+  station, switchMap, setSwitchMap, setRedirect, uID, sID, evalID, setDisableButton, disableButton,
 }) => (
-  <Form onSubmit={onSubmitEvaluation(uID, sID, evalID, switchMap, station.maxFailed, setRedirect)}>
+  <Form onSubmit={onSubmitEvaluation(uID, sID, evalID,
+    switchMap, station.maxFailed,
+    setRedirect, setDisableButton)}
+  >
     {station.groups.map((group) => (
       <Card key={group.groupID}>
         <Card.Header>{group.title}</Card.Header>
@@ -75,7 +81,7 @@ const EvaluationForm = ({
       </Card>
     ))}
     <br />
-    <Button className="edit-button" type="submit">
+    <Button className="edit-button" type="submit" disabled={disableButton}>
       Submit Evaluation
     </Button>
   </Form>
@@ -88,8 +94,9 @@ const changeSwitch = (id, switchMap, setSwitchMap) => () => {
 };
 
 const onSubmitEvaluation = (
-  uID, sID, evalID, switchMap, maxFailed, setRedirect,
+  uID, sID, evalID, switchMap, maxFailed, setRedirect, setDisableButton,
 ) => async (event) => {
+  setDisableButton(true);
   event.preventDefault();
   await submitEvaluation(uID, sID, evalID, switchMap, maxFailed);
   setRedirect(true);
