@@ -13,9 +13,9 @@ const Header = ({ isEval }) => (
         <Link to="/" className="nav-link">
           Home
         </Link>
-        <Link to="/events" className="nav-link">
+        <a href={process.env.REACT_APP_ATTENDANCE_REDIRECT} className="nav-link">
           Events
-        </Link>
+        </a>
         <Link to="/stations" className="nav-link">
           Stations
         </Link>

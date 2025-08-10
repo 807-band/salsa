@@ -8,7 +8,6 @@ const stationRoutes = require('./routes/stations.js');
 const userRoutes = require('./routes/users.js');
 const sectionRoutes = require('./routes/sections');
 const evaluationRoutes = require('./routes/evaluations');
-const eventRoutes = require('./routes/events');
 const attendanceRoutes = require('./routes/attendance');
 
 const app = express();
@@ -25,7 +24,6 @@ app.use('/api/station/', stationRoutes);
 app.use('/api/user/', userRoutes);
 app.use('/api/section/', sectionRoutes);
 app.use('/api/evaluations/', evaluationRoutes);
-app.use('/api/event/', eventRoutes);
 app.use('/api/attendance/', attendanceRoutes);
 
 if (process.env.ENVIRONMENT === 'prod') {
