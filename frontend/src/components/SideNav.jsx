@@ -7,10 +7,10 @@ const SideNav = ({ isAdmin, isEval }) => (
     <Link to="/" className={styles.parentPage}>
       Home
     </Link>
-    <Link to="/events" className={styles.parentPage}>
+    <a href={process.env.REACT_APP_ATTENDANCE_REDIRECT} className={styles.parentPage}>
       Events
-    </Link>
-    {isAdmin
+    </a>
+    {/* {isAdmin
       && (
         <>
           <Link to="/events/create" className={styles.childPage}>
@@ -23,7 +23,7 @@ const SideNav = ({ isAdmin, isEval }) => (
             Attendance
           </Link>
         </>
-      )}
+      )} */}
     <Link to="/stations" className={styles.parentPage}>
       Stations
     </Link>
