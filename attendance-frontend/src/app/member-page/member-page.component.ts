@@ -18,6 +18,7 @@ import {Utilities} from '../utilities/utilities';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog, MatDialogActions, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {BaseComponent} from '../base-component';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-member-page',
@@ -35,6 +36,7 @@ import {BaseComponent} from '../base-component';
     MatDialogActions,
     MatDialogTitle,
     RouterLink,
+    MatProgressSpinner,
   ],
   templateUrl: './member-page.component.html',
   styleUrl: './member-page.component.css'
@@ -155,6 +157,8 @@ export class MemberPageComponent extends BaseComponent implements OnInit {
       this.router.navigate(['/section', this.member?.section?.sectionId]);
     } else if (this.returnToPage == 'attendance') {
       this.router.navigate(['/admin/attendance']);
+    } else if (this.returnToPage == 'term') {
+      this.router.navigate(['/admin/term']);
     }
   }
 
