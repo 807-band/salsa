@@ -1,4 +1,4 @@
-import {Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild} from '@angular/core';
 import {DatePipe} from '@angular/common';
 import {
   MatCell,
@@ -33,7 +33,7 @@ import {Router} from '@angular/router';
   templateUrl: './member-attendance-table.component.html',
   styleUrl: './member-attendance-table.component.css'
 })
-export class MemberAttendanceTableComponent implements OnInit, OnChanges {
+export class MemberAttendanceTableComponent implements OnInit, AfterViewInit, OnChanges {
 
   @Input('attendances') attendances?: EventAttendanceMemberPage[];
 
@@ -48,6 +48,9 @@ export class MemberAttendanceTableComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.attendanceDataSource.data = this.attendances ?? [];
+  }
+
+  ngAfterViewInit() {
     this.attendanceDataSource.paginator = this.attendancePaginator;
   }
 
