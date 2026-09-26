@@ -44,6 +44,30 @@ export class MbEventRepository {
         });
     }
 
+    public async getVolunteer(): Promise<MBEvent[]> {
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+
+        return this.repo.find({
+            where: {
+                date: MoreThanOrEqual(oneHourAgo),
+                term: {
+                    startDate: LessThan(new Date()),
+                    endDate: MoreThanOrEqual(new Date()),
+                },
+                pepBand: {
+                    bandId: Constants.PEP_BAND_ID_VOLUNTEER
+                }
+            },
+            relations: {
+                term: true,
+                pepBand: true
+            },
+            order: {
+                date: 'ASC',
+            },
+        });
+    }
+
     public async getByTermId(termId: number): Promise<MBEvent[]> {
         return this.repo.find({
             where: { term: { termId } },

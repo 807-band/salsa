@@ -28,6 +28,7 @@ import {UsersPageComponent} from './admin/users-page/users-page.component';
 import {StationsPageComponent} from './admin/stations-page/stations-page.component';
 import {TermPageComponent} from './admin/term-page/term-page.component';
 import {StationsProgressPageComponent} from './admin/stations-progress-page/stations-progress-page.component';
+import {attendanceFormTitleResolver} from './resolvers/attendance-form-title-resolver';
 
 export const routes: Routes = [
   {
@@ -100,7 +101,7 @@ export const routes: Routes = [
         path: 'attendance-form/:id',
         component: AttendanceFormComponent,
         canActivate: [AuthzGuard],
-        title: 'Enter Attendance'
+        title: attendanceFormTitleResolver
       },
       {
         path: 'member/:id',

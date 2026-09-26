@@ -30,8 +30,6 @@ import {Section} from '../models/section';
 import {AttendanceSelectComponent} from './attendance-select/attendance-select.component';
 import {MemberSelectComponent} from './member-select/member-select.component';
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
-import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {MatInput} from '@angular/material/input';
 import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
@@ -94,7 +92,7 @@ export class AttendanceFormComponent implements OnInit {
 
   form: FormGroup;
 
-  columnsToDisplay = ['name', 'attendance'];
+  columnsToDisplay = ['name'];
 
   sectionMembers: Member[] = [];
 
@@ -125,6 +123,9 @@ export class AttendanceFormComponent implements OnInit {
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.fromList = params['fromList'] || 'upcoming';
+      if (this.fromList != 'volunteer') {
+        this.columnsToDisplay.push('attendance');
+      }
     })
 
     this.eventId = Number(this.route.snapshot.paramMap.get('id'));

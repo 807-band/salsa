@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, Output} from '@angular/core';
 import {
   MatCard,
   MatCardContent,
@@ -9,7 +9,6 @@ import {MatDivider} from '@angular/material/divider';
 import {MatIcon} from '@angular/material/icon';
 import {EventTagComponent} from './event-tag/event-tag.component';
 import {DatePipe, NgIf, NgStyle} from '@angular/common';
-import {Router} from '@angular/router';
 import {MBEvent} from '../../models/mb-event';
 import {Constants} from '../../utilities/constants';
 
@@ -35,22 +34,11 @@ export class EventComponent {
 
   protected readonly REHEARSAL = Constants.EVENT_TYPE_REHEARSAL;
 
-  constructor(private router: Router) {
+  constructor() {
   }
 
   @Input()
   event: MBEvent | null = null;
-
-  @Input()
-  fromList: string = '';
-
-  navigateToForm() {
-    if (this.fromList === 'volunteer') {
-      this.router.navigate(['/volunteer-signup-page', this.event?.eventId]);
-    } else {
-      this.router.navigate(['/attendance-form', this.event?.eventId], { queryParams: { fromList: this.fromList } });
-    }
-  }
 
   protected readonly EVENT_TYPE_PEP_EVENT = Constants.EVENT_TYPE_PEP_EVENT;
 
