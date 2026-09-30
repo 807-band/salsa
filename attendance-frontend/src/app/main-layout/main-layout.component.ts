@@ -150,7 +150,7 @@ export class MainLayoutComponent extends BaseComponent implements OnInit {
 
     if (this.sessionCacheService.isSectionLeader() || this.sessionCacheService.isOfficer()) {
       links.push({
-        name: 'Volunteer Events Sign-Up',
+        name: 'Volunteer Event Rosters',
         route: '/events',
         queryParams: { type: 'volunteer' }
       })
