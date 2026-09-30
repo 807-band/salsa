@@ -3,7 +3,7 @@ import {EventComponent} from './event/event.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {MBEvent} from '../models/mb-event';
 import {EventService} from '../services/event.service';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-event-list',
@@ -23,7 +23,8 @@ export class EventListComponent implements OnInit {
   listType: string = 'upcoming';
 
   constructor(private eventService: EventService,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -44,5 +45,9 @@ export class EventListComponent implements OnInit {
         })
       }
     })
+  }
+
+  navigateToForm(eventId: number) {
+    this.router.navigate(['/attendance-form', eventId], { queryParams: { fromList: this.listType } });
   }
 }

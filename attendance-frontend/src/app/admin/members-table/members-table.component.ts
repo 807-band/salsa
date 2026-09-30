@@ -267,7 +267,7 @@ export class MembersTableComponent implements OnInit, AfterViewInit {
   }
 
   navigateToMember(memberId: number) {
-    this.router.navigate(['/member', memberId], {queryParams: {returnTo: 'admin'}});
+    this.router.navigate(['/member', memberId], {queryParams: {returnTo: 'term'}});
   }
 
   updateMemberFilter() {

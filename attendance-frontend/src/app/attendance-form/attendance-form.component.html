@@ -32,7 +32,7 @@
       <span style="color: var(--thursday-conflict-color)">{{Constants.REHEARSAL_CONFLICT_THURS}}</span><br/>
     </div>
   </div>
-  <div style="display: flex; justify-content: flex-end;">
+  <div *ngIf="fromList != 'volunteer'" style="display: flex; justify-content: flex-end;">
     <button mat-flat-button
             (click)="clearForm()"
             style="font-size: .8rem; height: auto; width: auto; padding-top: 6px; padding-bottom: 6px; margin-right: 4px;"
@@ -65,7 +65,7 @@
 
             <ng-container matColumnDef="attendance">
               <td mat-cell *matCellDef="let attendance; let i = index" [formGroupName]="i">
-                <div style="display: flex; flex-direction: row; justify-content: end; padding-left: 8px">
+                <div style="display: flex; flex-direction: row; justify-content: end;">
                   <mat-checkbox
                     [checked]="attendances.at(i).get('attendance')?.value === 'Present'"
                     (change)="onPresentCheckboxChange($event.checked, i)">
@@ -112,13 +112,13 @@
 
 
 <ng-template #confirmSubmitDialog>
-  <h2 mat-dialog-title>Submit Form?</h2>
+  <h2 mat-dialog-title>Save Form?</h2>
   <mat-dialog-content>
     <p>Changes can be re-submitted anytime.</p>
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button (click)="cancelDialog()">Cancel</button>
-    <button mat-button (click)="onSubmit()">Submit</button>
+    <button mat-button (click)="onSubmit()">Save</button>
   </mat-dialog-actions>
 </ng-template>
 

@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-card (click)="navigateToForm()" [ngStyle]="{'background-color': event?.type == REHEARSAL ? 'var(--accent-color)' : 'var(--primary-color)'}">
+  <mat-card [ngStyle]="{'background-color': event?.type == REHEARSAL ? 'var(--accent-color)' : 'var(--primary-color)'}">
     <mat-card-header>
 <!--      for events, the arrow is in line with the tag-->
       <div *ngIf="event?.type === EVENT_TYPE_PEP_EVENT" class="event-header-container">

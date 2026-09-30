@@ -60,6 +60,15 @@ export class MbEventService {
         return eventDtos;
     }
 
+    public async getVolunteer(): Promise<MBEventDto[]> {
+        const events: MBEvent[] =
+            await this.eventRepository.getVolunteer();
+
+        const eventDtos = events.map(event => toMbEventDto(event));
+
+        return eventDtos;
+    }
+
     public async getByTermId(termId: number): Promise<MBEvent[]> {
         const events: MBEvent[] =
             await this.eventRepository.getByTermId(termId);

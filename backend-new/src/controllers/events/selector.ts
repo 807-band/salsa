@@ -37,6 +37,18 @@ export const getUpcoming = async (req: any, res: any) => {
   }
 };
 
+export const getVolunteer = async (req: any, res: any) => {
+  try {
+    const events: MBEventDto[] = await eventService.getVolunteer();
+
+    res.send(events);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Query failed');
+  }
+};
+
 export const getById = async (req: any, res: any) => {
   try {
     const eventId = req.params.id;

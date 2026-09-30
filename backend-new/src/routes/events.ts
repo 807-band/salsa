@@ -17,6 +17,7 @@ router.delete('/:id', events.admin.deleteEvent);
 
 router.get('/upcoming', events.selector.getUpcoming);
 router.get('/recent', events.selector.getRecent);
+router.get('/volunteer', events.selector.getVolunteer);
 router.get('/:id', events.selector.getById);
 router.get('/term/:id', events.selector.getByTermId);
 

@@ -148,6 +148,14 @@ export class MainLayoutComponent extends BaseComponent implements OnInit {
       })
     }
 
+    if (this.sessionCacheService.isSectionLeader() || this.sessionCacheService.isOfficer()) {
+      links.push({
+        name: 'Volunteer Event Rosters',
+        route: '/events',
+        queryParams: { type: 'volunteer' }
+      })
+    }
+
     // everyone in leadership + admin can access stations
     const stationsLinks = {
       name: 'Stations',

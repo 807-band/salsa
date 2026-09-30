@@ -1,4 +1,6 @@
 <div class="event-container">
   <p *ngIf="!eventList.length">No events found.</p>
-  <app-event *ngFor="let event of eventList" [event]="event" [fromList]="listType"></app-event>
+  <app-event *ngFor="let event of eventList"
+             (click)="navigateToForm(event.eventId)"
+             [event]="event"></app-event>
 </div>
