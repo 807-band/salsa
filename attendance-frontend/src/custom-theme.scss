@@ -98,6 +98,7 @@ $client-theme: mat.define-light-theme((
 :root {
   --primary-color: #{mat.get-color-from-palette($primary, default)};
   --accent-color: #{mat.get-color-from-palette($accent, default)};
+  --accent-light: #{mat.get-color-from-palette($accent, 700)};
   --arriving-late-color: darkred;
   --leaving-early-color: royalblue;
   --other-conflict-color: purple;

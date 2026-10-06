@@ -1,0 +1,53 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+mat-card {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  align-items: flex-start;
+  border-radius: 14px;
+  align-self: center;
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .4);
+  background-color: var(--accent-color)
+}
+
+mat-card:hover {
+  background-color: var(--accent-light);
+  cursor: pointer;
+}
+
+mat-card-header {
+  width: 100%;
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.group-icon {
+  vertical-align: middle;
+  height: auto;
+  width: auto;
+  margin-left: 5px;
+}
+
+mat-divider {
+  border-top-color: white;
+  width: 85%;
+}
+
+mat-card-content {
+  font-weight: lighter;
+  font-size: .8rem;
+}
+
+.title-arrow-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

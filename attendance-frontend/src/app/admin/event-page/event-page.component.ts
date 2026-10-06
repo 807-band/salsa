@@ -42,7 +42,8 @@ import {MatCheckbox} from '@angular/material/checkbox'
     MatDialogTitle,
     DatePipe,
     MatDivider,
-    MatCheckbox
+    MatCheckbox,
+    MatIcon
   ],
   templateUrl: './event-page.component.html',
   styleUrl: './event-page.component.css'
@@ -197,5 +198,10 @@ export class EventPageComponent implements OnInit {
     this._snackBar.open(message, action, {duration: duration, horizontalPosition: 'center', verticalPosition: 'top'});
   }
 
-  readonly EVENT_TYPE_PEP_EVENT = Constants.EVENT_TYPE_PEP_EVENT
+  navigateToRoster() {
+    this.router.navigate(['/event', this.event?.eventId, 'roster'], {queryParams: {returnTo: 'event'}})
+  }
+
+  readonly EVENT_TYPE_PEP_EVENT = Constants.EVENT_TYPE_PEP_EVENT;
+  readonly PEP_BAND_ID_VOLUNTEER = Constants.PEP_BAND_ID_VOLUNTEER;
 }

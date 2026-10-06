@@ -68,6 +68,43 @@ export class MbEventRepository {
         });
     }
 
+    /**
+     * Used in the admin page for viewing volunteer event rosters
+     * @param id
+     */
+    public async findVolunteerEventById(id: number): Promise<MBEvent> {
+        const mbEvent = await this.repo
+            .createQueryBuilder('event')
+            .leftJoinAndSelect(
+                'event.attendances',
+                'ea',
+                'ea.memberId IS NOT NULL'
+            )
+            .leftJoinAndSelect(
+                'ea.member', 'member'
+            )
+            .leftJoinAndSelect(
+                'member.user', 'user'
+            )
+            .leftJoinAndSelect(
+                'ea.section', 'section'
+            )
+            // TODO: this mapper is buggy. fix it whenever you re-add VRMCs
+            // .leftJoinAndSelect(
+            //     'event.volunteerRosterMemberCounts',
+            //     'vrmc'
+            // )
+            .where('event.eventId = :id', { id })
+            .orderBy('ea.section.sectionId')
+            .getOne();
+
+        if (!mbEvent) {
+            throw new NotFoundError('Event not found');
+        }
+
+        return mbEvent;
+    }
+
     public async getByTermId(termId: number): Promise<MBEvent[]> {
         return this.repo.find({
             where: { term: { termId } },

@@ -4,6 +4,7 @@ import {MBEventDto} from "../dto/mb-event.dto";
 import {toPepBandDto} from "./pepBand.mapper";
 import {toTermDto} from "./term.mapper";
 import {toVolunteerRosterMemberCountDto} from "./volunteer-roster-member-count.mapper";
+import {toEventAttendanceDto} from "./attendance.mapper";
 
 export function toMbEventDto(mbEvent: MBEvent): MBEventDto {
     const plainObj = {
@@ -16,6 +17,9 @@ export function toMbEventDto(mbEvent: MBEvent): MBEventDto {
         pepBand: mbEvent.pepBand ? toPepBandDto(mbEvent.pepBand) : null,
         term: mbEvent.term ? toTermDto(mbEvent.term) : null,
 
+        attendances: mbEvent.attendances
+            ? mbEvent.attendances.map(toEventAttendanceDto)
+            : [],
         volunteerRosterMemberCounts: mbEvent.volunteerRosterMemberCounts
             ? mbEvent.volunteerRosterMemberCounts.map(toVolunteerRosterMemberCountDto)
             : [],

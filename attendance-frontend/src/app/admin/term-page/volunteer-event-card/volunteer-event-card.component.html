@@ -1,0 +1,25 @@
+<div class="container">
+  <mat-card>
+    <ng-container *ngIf="isMobile; else desktopView">
+      <mat-card-header>
+      <span style="font-size: .8rem; font-weight: lighter; display: flex; align-items: center; justify-content: space-between">
+        {{event?.date | date: 'EE MM/d' }}
+        <mat-icon fontSet="material-symbols-outlined" class="group-icon" style="color: var(--primary-color);">group</mat-icon>
+      </span>
+        <span style="font-size: 1.2rem; font-family: RedditSansCondensed, sans-serif">{{event?.title}}</span>
+      </mat-card-header>
+    </ng-container>
+
+    <ng-template #desktopView>
+      <mat-card-header>
+      <span style="font-size: .8rem; font-weight: lighter; display: flex; align-items: center;">
+        {{event?.date | date: 'EEEE, MMMM d' }}
+        <mat-icon fontSet="material-symbols-outlined" class="group-icon" style="color: var(--primary-color);">group</mat-icon>
+      </span>
+        <span style="font-size: 1.2rem; margin-top: 5px; font-family: RedditSansCondensed, sans-serif">{{event?.title}}</span>
+      </mat-card-header>
+    </ng-template>
+
+    <mat-card-content></mat-card-content>
+  </mat-card>
+</div>

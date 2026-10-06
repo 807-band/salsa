@@ -79,11 +79,19 @@
       </div>
     </div>
 
-    <button *ngIf="!editing"
-            type="button"
-            (click)="goBack()"
-            mat-flat-button
-            style="background-color: lightgray;">Back</button>
+    <div *ngIf="!editing" style="display: flex; align-items: center; justify-content: start; gap: 10px; max-width: 400px;">
+      <button
+              type="button"
+              (click)="goBack()"
+              mat-flat-button
+              style="background-color: lightgray;">Back</button>
+
+      <button *ngIf="event?.pepBand?.bandId === PEP_BAND_ID_VOLUNTEER" mat-button type="button" color="accent" (click)="navigateToRoster()">
+        <span style="text-decoration: underline">View Roster</span>
+        <mat-icon iconPositionEnd class="material-symbols-outlined">arrow_right_alt</mat-icon>
+      </button>
+    </div>
+
   </form>
 </div>
 

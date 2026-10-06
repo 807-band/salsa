@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {DatePipe, NgForOf, NgIf} from '@angular/common';
 import {EventsTableComponent} from '../events-table/events-table.component';
 import {MatAccordion, MatExpansionPanel, MatExpansionPanelHeader} from '@angular/material/expansion';
@@ -8,21 +8,19 @@ import {MatIcon} from '@angular/material/icon';
 import {MatOption} from '@angular/material/core';
 import {MatSelect} from '@angular/material/select';
 import {MembersTableComponent} from '../members-table/members-table.component';
-import {Station} from '../../models/station';
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Term} from '../../models/term';
 import {FormsModule, NgForm, ReactiveFormsModule} from '@angular/forms';
 import {AdminService} from '../../services/admin.service';
-import {UserService} from '../../services/user.service';
-import {StationService} from '../../services/station.service';
 import {SessionCacheService} from '../../services/session-cache.service';
 import {Router} from '@angular/router';
-import {User} from '../../models/user';
 import {MatDatepicker, MatDatepickerInput, MatDatepickerToggle} from '@angular/material/datepicker';
-import {Utilities} from '../../utilities/utilities';
 import {BaseComponent} from '../../base-component';
 import {Constants} from '../../utilities/constants';
+import {EventService} from '../../services/event.service';
+import {MBEvent} from '../../models/mb-event';
+import {VolunteerEventCardComponent} from './volunteer-event-card/volunteer-event-card.component';
 
 @Component({
   selector: 'app-term-page',
@@ -52,7 +50,8 @@ import {Constants} from '../../utilities/constants';
     MatInput,
     MatSuffix,
     ReactiveFormsModule,
-    NgIf
+    NgIf,
+    VolunteerEventCardComponent
   ],
   templateUrl: './term-page.component.html',
   styleUrl: './term-page.component.css'
@@ -68,6 +67,8 @@ export class TermPageComponent extends BaseComponent implements OnInit {
 
   editingTerm: boolean = false;
 
+  volunteerEvents: MBEvent[] = [];
+
   @ViewChild('termDialog') termDialog!: TemplateRef<any>;
   termDialogRef!: MatDialogRef<any>;
 
@@ -78,6 +79,7 @@ export class TermPageComponent extends BaseComponent implements OnInit {
   @ViewChild(MembersTableComponent) membersTable!: MembersTableComponent;
 
   constructor(private adminService: AdminService,
+              private eventService: EventService,
               public sessionCacheService: SessionCacheService,
               private dialog: MatDialog,
               private router: Router,
@@ -86,6 +88,10 @@ export class TermPageComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.eventService.getVolunteerEvents().subscribe(events => {
+      this.volunteerEvents.push(...events);
+    })
+
     this.adminService.getTerms().subscribe(terms => {
       this.terms.push(...terms);
 
@@ -159,6 +165,10 @@ export class TermPageComponent extends BaseComponent implements OnInit {
   // goToAttendance() {
   //   this.router.navigate(['/attendance/term', this.selectedTerm?.termId])
   // }
+
+  goToVolunteerRoster(eventId: number) {
+    this.router.navigate(['/event', eventId, 'roster'], {queryParams: {returnTo: 'admin'}})
+  }
 
   openSnackBar(message: string, action: string, duration: number) {
     this.snackbar.open(message, action, {duration: duration, horizontalPosition: 'center', verticalPosition: 'top'});

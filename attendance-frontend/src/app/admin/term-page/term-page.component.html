@@ -1,21 +1,31 @@
 <div>
   <ng-container *ngIf="isMobile(); else desktopView">
-    <div style="margin-bottom: 10px; display: flex; align-items: start; justify-content: space-between">
+    <div style="margin-bottom: 5px; display: flex; align-items: start; justify-content: space-between">
 
-      <div style="display: flex; flex-direction: column; gap: 10px">
-        <mat-form-field subscriptSizing="dynamic" style="width: 60%;">
-          <mat-label class="form-label">Select a term</mat-label>
-          <mat-select [(ngModel)]="selectedTerm" (selectionChange)="onTermChange($event.value)">
-            <mat-option *ngFor="let option of terms" [value]="option">{{option.termName}}</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <div style="display: flex; align-items: center;">
-          <span>{{selectedTerm?.startDate | date: 'M/d/yy'}} - {{selectedTerm?.endDate | date: 'M/d/yy'}}</span>
+      <mat-form-field subscriptSizing="dynamic" style="width: 60%;">
+        <mat-label class="form-label">Select a term</mat-label>
+        <mat-select [(ngModel)]="selectedTerm" (selectionChange)="onTermChange($event.value)">
+          <mat-option *ngFor="let option of terms" [value]="option">{{option.termName}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div style="display: flex; flex-direction: column; align-items: end;">
+        <button mat-flat-button color="primary" (click)="openTermDialog(false)">Create Term</button>
+        <div style="display: flex; align-items: center; margin-top: 20px;">
+          <span style="white-space: nowrap">{{selectedTerm?.startDate | date: 'M/d/yy'}} - {{selectedTerm?.endDate | date: 'M/d/yy'}}</span>
           <button mat-icon-button (click)="openTermDialog(true)"><mat-icon class="material-symbols-outlined">edit_square</mat-icon></button>
         </div>
       </div>
 
-      <button mat-flat-button color="primary" (click)="openTermDialog(false)">Create Term</button>
+    </div>
+
+    <div *ngIf="volunteerEvents.length" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 0 20px 2px; margin-bottom: 10px;">
+      <app-volunteer-event-card *ngFor="let event of volunteerEvents"
+                                style="flex: 0 0 40%"
+                                [event]="event"
+                                [isMobile]="true"
+                                (click)="goToVolunteerRoster(event.eventId)">
+      </app-volunteer-event-card>
     </div>
   </ng-container>
 
@@ -35,17 +45,24 @@
         <button mat-icon-button (click)="openTermDialog(true)"><mat-icon class="material-symbols-outlined">edit_square</mat-icon></button>
       </div>
     </div>
+
+    <div *ngIf="volunteerEvents.length" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 0 20px 2px;">
+      <app-volunteer-event-card *ngFor="let event of volunteerEvents"
+                                [event]="event"
+                                (click)="goToVolunteerRoster(event.eventId)">
+      </app-volunteer-event-card>
+    </div>
   </ng-template>
 
 
   <mat-accordion multi>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>Events</mat-expansion-panel-header>
       <div style="padding-top:5px">
         <app-events-table [selectedTerm]="selectedTerm"></app-events-table>
       </div>
     </mat-expansion-panel>
-    <mat-expansion-panel>
+    <mat-expansion-panel [expanded]="true">
       <mat-expansion-panel-header>Members</mat-expansion-panel-header>
       <div style="padding-top:5px;">
         <app-members-table [selectedTerm]="selectedTerm"></app-members-table>

@@ -29,6 +29,7 @@ import {StationsPageComponent} from './admin/stations-page/stations-page.compone
 import {TermPageComponent} from './admin/term-page/term-page.component';
 import {StationsProgressPageComponent} from './admin/stations-progress-page/stations-progress-page.component';
 import {attendanceFormTitleResolver} from './resolvers/attendance-form-title-resolver';
+import {VolunteerRosterPageComponent} from './admin/volunteer-roster-page/volunteer-roster-page.component';
 
 export const routes: Routes = [
   {
@@ -126,6 +127,12 @@ export const routes: Routes = [
         component: EventPageComponent,
         canActivate: [AuthzGuard],
         title: 'Event'
+      },
+      {
+        path: 'event/:id/roster',
+        component: VolunteerRosterPageComponent,
+        canActivate: [AuthzGuard],
+        title: 'Volunteer Roster'
       },
       {
         path: 'section/:id',
