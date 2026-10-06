@@ -1,5 +1,5 @@
 <div class="container">
-  <mat-card>
+  <mat-card (click)="onCardClicked()">
     <ng-container *ngIf="isMobile; else desktopView">
       <mat-card-header>
       <span style="font-size: .8rem; font-weight: lighter; display: flex; align-items: center; justify-content: space-between">

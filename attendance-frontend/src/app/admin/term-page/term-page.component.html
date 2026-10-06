@@ -24,7 +24,7 @@
                                 style="flex: 0 0 40%"
                                 [event]="event"
                                 [isMobile]="true"
-                                (click)="goToVolunteerRoster(event.eventId)">
+                                (eventClicked)="goToVolunteerRoster(event.eventId)">
       </app-volunteer-event-card>
     </div>
   </ng-container>
@@ -50,7 +50,7 @@
       <app-volunteer-event-card *ngFor="let event of volunteerEvents"
                                 [event]="event"
                                 style="width: 200px; min-width: 200px;"
-                                (click)="goToVolunteerRoster(event.eventId)">
+                                (eventClicked)="goToVolunteerRoster(event.eventId)">
       </app-volunteer-event-card>
     </div>
   </ng-template>
