@@ -42,6 +42,13 @@ export class MbEventService {
         return mbEvent;
     }
 
+    public async getVolunteerEventById(eventId: number): Promise<MBEvent> {
+        const mbEvent: MBEvent =
+            await this.eventRepository.findVolunteerEventById(eventId);
+
+        return mbEvent;
+    }
+
     public async getUpcoming(): Promise<MBEventDto[]> {
         const events: MBEvent[] =
             await this.eventRepository.getUpcomingOrRecent(true);

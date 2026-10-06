@@ -69,6 +69,32 @@ export const getById = async (req: any, res: any) => {
   }
 };
 
+/**
+ * This is used in the admin page, to view volunteer event rosters
+ * @param req
+ * @param res
+ */
+export const getVolunteerEventById = async (req: any, res: any) => {
+  try {
+    const eventId = req.params.id;
+
+    const mbEvent: MBEvent = await eventService.getVolunteerEventById(eventId);
+
+    const eventDto = toMbEventDto(mbEvent);
+
+    res.send(eventDto);
+
+  } catch (err) {
+    if (err instanceof NotFoundError) {
+      return res.status(404).send('Event not found');
+    }
+
+    console.error(err);
+    res.status(500).send('Query failed');
+  }
+};
+
+
 export const getByTermId = async (req: any, res: any) => {
   try {
     const termId = req.params.id;

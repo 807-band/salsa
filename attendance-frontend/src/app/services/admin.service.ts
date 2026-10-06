@@ -28,6 +28,11 @@ export class AdminService {
     return this.http.get<Term>(url);
   }
 
+  public getVolunteerEventById(id: number): Observable<MBEvent> {
+    const url = this.baseUrl + `/events/volunteer/${id}`;
+    return this.http.get<MBEvent>(url);
+  }
+
   public getEventsByTermId(id: number): Observable<MBEvent[]> {
     const url = this.baseUrl + `/events/term/${id}`;
     return this.http.get<MBEvent[]>(url);
