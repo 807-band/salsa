@@ -49,6 +49,7 @@
     <div *ngIf="volunteerEvents.length" style="display: flex; gap: 10px; overflow-x: auto; padding: 0 0 20px 2px;">
       <app-volunteer-event-card *ngFor="let event of volunteerEvents"
                                 [event]="event"
+                                style="width: 200px; min-width: 200px;"
                                 (click)="goToVolunteerRoster(event.eventId)">
       </app-volunteer-event-card>
     </div>
