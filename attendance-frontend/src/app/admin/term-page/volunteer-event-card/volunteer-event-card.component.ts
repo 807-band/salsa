@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {DatePipe, NgIf} from '@angular/common';
 import {MatCard, MatCardContent, MatCardHeader} from '@angular/material/card';
 import {MatIcon} from '@angular/material/icon';
@@ -24,4 +24,10 @@ export class VolunteerEventCardComponent {
 
   @Input()
   isMobile: boolean = false;
+
+  @Output() eventClicked = new EventEmitter<number>;
+
+  onCardClicked() {
+    this.eventClicked.emit(this.event?.eventId);
+  }
 }
