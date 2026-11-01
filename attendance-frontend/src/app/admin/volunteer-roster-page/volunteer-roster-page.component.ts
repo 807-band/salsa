@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router, RouterLink} from '@angular/router';
 import {MBEvent} from '../../models/mb-event';
 import {AdminService} from '../../services/admin.service';
@@ -16,7 +16,9 @@ import {
   MatTable
 } from '@angular/material/table';
 import {BaseComponent} from '../../base-component';
-import {MatButton} from '@angular/material/button';
+import {MatButton, MatIconButton} from '@angular/material/button';
+import { Clipboard } from '@angular/cdk/clipboard';
+import {MatTooltip} from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-volunteer-roster-page',
@@ -38,7 +40,9 @@ import {MatButton} from '@angular/material/button';
     MatHeaderRowDef,
     MatRow,
     MatRowDef,
-    MatButton
+    MatButton,
+    MatIconButton,
+    MatTooltip
   ],
   templateUrl: './volunteer-roster-page.component.html',
   styleUrl: './volunteer-roster-page.component.css'
@@ -53,9 +57,16 @@ export class VolunteerRosterPageComponent extends BaseComponent implements OnIni
 
   returnTo: string = '';
 
+  emailList: string = '';
+  copied: boolean = false;
+  private copyTimeout?: ReturnType<typeof setTimeout>;
+
+  @ViewChild('copyTooltip') copyTooltip!: MatTooltip;
+
   constructor(private route: ActivatedRoute,
               private router: Router,
-              private adminService: AdminService) {
+              private adminService: AdminService,
+              private clipboard: Clipboard) {
     super();
   }
 
@@ -63,6 +74,8 @@ export class VolunteerRosterPageComponent extends BaseComponent implements OnIni
     const eventId = Number(this.route.snapshot.paramMap.get('id'));
 
     this.returnTo = this.route.snapshot.paramMap.get('returnTo') ?? 'admin';
+
+    const emails: string[] = [];
 
     this.adminService.getVolunteerEventById(eventId).subscribe(e => {
       this.event = e;
@@ -80,12 +93,33 @@ export class VolunteerRosterPageComponent extends BaseComponent implements OnIni
 
         members.push(att.member)
         memberMap.set(sectionName, members);
+
+        emails.push(att.member.user.email);
       }
 
       this.membersGroupedBySection = Array.from(memberMap.entries());
 
       this.eventLoaded = true;
+
+      this.emailList = emails.join('; ');
     })
+  }
+
+  copyEmailList() {
+    this.clipboard.copy(this.emailList);
+
+    this.copied = true;
+
+    // Reset the timer if the user clicks multiple times
+    clearTimeout(this.copyTimeout);
+
+    // Force the tooltip to appear immediately
+    setTimeout(() => this.copyTooltip.show(0), 0);
+
+    this.copyTimeout = setTimeout(() => {
+      this.copyTooltip.hide(0);
+      this.copied = false;
+    }, 1000);
   }
 
   goBack() {

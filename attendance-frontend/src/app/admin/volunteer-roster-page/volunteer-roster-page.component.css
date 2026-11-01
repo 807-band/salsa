@@ -36,3 +36,8 @@ a:hover {
   background-color: var(--primary-color);
   color: white;
 }
+
+.email-list-heading {
+  background-color: var(--accent-color);
+  color: white;
+}

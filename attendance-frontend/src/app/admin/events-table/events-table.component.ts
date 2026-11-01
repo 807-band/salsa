@@ -22,7 +22,6 @@ import {MatFormField, MatLabel, MatSuffix} from '@angular/material/form-field';
 import {MatOption} from '@angular/material/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSelect} from '@angular/material/select';
-import {Utilities} from '../../utilities/utilities';
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {PepBand} from '../../models/pep-band';
 import {MBEvent} from '../../models/mb-event';
@@ -35,6 +34,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {SessionCacheService} from '../../services/session-cache.service';
 import {AdminService} from '../../services/admin.service';
 import {Router} from '@angular/router';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-events-table',
@@ -67,7 +67,8 @@ import {Router} from '@angular/router';
     MatDialogTitle,
     MatInput,
     MatSuffix,
-    NgIf
+    NgIf,
+    MatProgressSpinner
   ],
   templateUrl: './events-table.component.html',
   styleUrl: './events-table.component.css'
@@ -102,6 +103,8 @@ export class EventsTableComponent implements OnInit, AfterViewInit {
   eventPepBand: PepBand | null = null;
   eventDate: Date | null = null;
   eventTime: string = '';
+
+  submitting: boolean = false;
 
   constructor(private adminService: AdminService,
               private dialog: MatDialog,
@@ -138,6 +141,8 @@ export class EventsTableComponent implements OnInit, AfterViewInit {
   }
 
   submitEvent(form: NgForm) {
+    this.submitting = true;
+
     this.combineDateAndTimeInputs();
 
     let newEvent = {
@@ -156,9 +161,11 @@ export class EventsTableComponent implements OnInit, AfterViewInit {
       this.eventDataSource.paginator = this.eventPaginator;
       this.openSnackBar("Event created!", "Ok", 3000);
       form.reset();
+      this.submitting = false;
       this.eventDialogRef.close();
     }, error => {
       console.log(error);
+      this.submitting = false;
       this.openSnackBar("Error creating event", "Ok", 3000);
     })
   }

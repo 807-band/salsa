@@ -118,7 +118,10 @@
   </mat-dialog-content>
   <mat-dialog-actions align="end">
     <button mat-button (click)="cancelDialog()">Cancel</button>
-    <button mat-button (click)="onSubmit()">Save</button>
+    <button mat-button (click)="onSubmit()" [disabled]="submitting">
+      <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
+      <span *ngIf="!submitting">Save</span>
+    </button>
   </mat-dialog-actions>
 </ng-template>
 

@@ -31,6 +31,7 @@ import {AttendanceSelectComponent} from './attendance-select/attendance-select.c
 import {MemberSelectComponent} from './member-select/member-select.component';
 import {MatDialog, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-attendance-form',
@@ -61,6 +62,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
     MatDialogTitle,
     MatCheckbox,
     MatDialogContent,
+    MatProgressSpinner,
   ],
   templateUrl: './attendance-form.component.html',
   styleUrl: './attendance-form.component.css'
@@ -103,6 +105,8 @@ export class AttendanceFormComponent implements OnInit {
   showDuplicateMemberError: boolean = false;
 
   fromList: string = '';
+
+  submitting: boolean = false;
 
   constructor(private route: ActivatedRoute,
               private router: Router,
@@ -203,13 +207,16 @@ export class AttendanceFormComponent implements OnInit {
   }
 
   public onSubmit() {
-
-    this.cancelDialog();
+    this.submitting = true;
 
     this.eventService.submitAttendanceForm(this.eventAttendances).subscribe(() => {
+      this.submitting = false;
+      this.cancelDialog();
       this.openSuccessDialog();
     }, error => {
       console.log(error);
+      this.submitting = false;
+      this.cancelDialog();
       this.openSnackBar("Error submitting form", "Ok", 3000);
     })
   }

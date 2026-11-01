@@ -33,41 +33,47 @@
   <h2 mat-dialog-title>Create Event</h2>
   <form #eventForm="ngForm" (ngSubmit)="submitEvent(eventForm)">
     <mat-dialog-content>
-      <div style="display: flex; flex-direction: column">
+      <div style="display: flex; flex-direction: column; position: relative">
         <mat-form-field>
           <mat-label class="form-label">Title</mat-label>
-          <input matInput id="eventTitle" type="text" name="eventTitle" [(ngModel)]="eventTitle">
+          <input matInput id="eventTitle" type="text" name="eventTitle" [(ngModel)]="eventTitle" [disabled]="submitting">
         </mat-form-field>
         <mat-form-field>
           <mat-label class="form-label">Type</mat-label>
-          <mat-select id="eventType" name="eventType" [(ngModel)]="eventType">
+          <mat-select id="eventType" name="eventType" [(ngModel)]="eventType" [disabled]="submitting">
             <mat-option [value]="null">--</mat-option>
             <mat-option *ngFor="let option of eventTypeOptions" [value]="option">{{option}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field *ngIf="eventType === EVENT_TYPE_PEP_EVENT">
           <mat-label class="form-label">Pep Band</mat-label>
-          <mat-select id="eventPepBand" name="eventPepBand" [(ngModel)]="eventPepBand">
+          <mat-select id="eventPepBand" name="eventPepBand" [(ngModel)]="eventPepBand" [disabled]="submitting">
             <mat-option [value]="null">--</mat-option>
             <mat-option *ngFor="let option of pepBandOptions" [value]="option">{{option.displayName}}</mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field>
           <mat-label class="form-label">Event Date</mat-label>
-          <input matInput [matDatepicker]="eventPicker" name="eventDate" [(ngModel)]="eventDate">
+          <input matInput [matDatepicker]="eventPicker" name="eventDate" [(ngModel)]="eventDate" [disabled]="submitting">
           <mat-datepicker-toggle matIconSuffix [for]="eventPicker"></mat-datepicker-toggle>
           <mat-datepicker #eventPicker></mat-datepicker>
         </mat-form-field>
         <mat-form-field>
           <mat-label>Event time</mat-label>
           <input matInput type="time" name="eventTime"
-                 [(ngModel)]="eventTime">
+                 [(ngModel)]="eventTime" [disabled]="submitting">
         </mat-form-field>
+
+        <!-- Loading overlay -->
+        <div *ngIf="submitting" class="loading-overlay"
+             role="status" aria-label="Submitting event">
+          <mat-spinner diameter="48"></mat-spinner>
+        </div>
       </div>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="onCancelDialog()">Cancel</button>
-      <button mat-button type="submit">Submit</button>
+      <button mat-button type="submit" [disabled]="submitting">Submit</button>
     </mat-dialog-actions>
   </form>
 </ng-template>

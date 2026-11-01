@@ -5,3 +5,16 @@
 .clickable-row:hover {
   background-color: #f5f5f5;
 }
+
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: rgba(255, 255, 255, 0.65);
+  border-radius: inherit;
+}
