@@ -19,9 +19,14 @@
       <a class="title" [routerLink]="['/event', this.event.eventId]" style="color: inherit; text-decoration: none;">
         <span>{{event.title}}</span>
       </a>
-      <div style="display: flex; justify-content: end; color:var(--accent-color); margin-bottom: 5px; margin-top: 5px;">
-        <span *ngIf="event.attendances.length">Total members assigned: {{event.attendances.length}}</span>
-        <span *ngIf="!event.attendances.length">No members assigned yet.</span>
+      <div style="display: flex; justify-content: space-between; align-items: center; color:var(--accent-color); margin-bottom: 5px; margin-top: 5px;">
+        <div>
+          <span *ngIf="event.attendances.length">Total members assigned: {{event.attendances.length}}</span>
+          <span *ngIf="!event.attendances.length">No members assigned yet.</span>
+        </div>
+        <button mat-flat-button color="accent" (click)="copyEmailList()" style="width: 150px">
+          {{ copying ? 'Copied!' : 'Copy Email List' }}
+        </button>
       </div>
     </div>
 
@@ -62,7 +67,8 @@
       <span class="title" style="color: dimgray;">&nbsp;- Volunteer Roster</span>
     </div>
     <div style="margin-top: 12px; margin-bottom: 12px; color:var(--accent-color)">
-      <span>Total Members Assigned: {{event.attendances.length}}</span>
+      <span *ngIf="event.attendances.length">Total members assigned: {{event.attendances.length}}</span>
+      <span *ngIf="!event.attendances.length">No members assigned yet.</span>
     </div>
 
     <div style="padding: 5px; max-width: 500px; margin-bottom: 10px;">
@@ -74,9 +80,9 @@
               <span>Email List</span>
               <button mat-icon-button (click)="copyEmailList()"
                       #copyTooltip = matTooltip
-                      [matTooltip]="copied ? 'Copied!' : 'Copy Email List'"
+                      [matTooltip]="copying ? 'Copied!' : 'Copy Email List'"
                       style="height: 2rem; width: 2rem; padding: 5px;">
-                <mat-icon class="material-symbols-outlined">{{ copied ? 'check' : 'content_copy' }}</mat-icon>
+                <mat-icon class="material-symbols-outlined">{{ copying ? 'check' : 'content_copy' }}</mat-icon>
               </button>
             </div>
           </th>
