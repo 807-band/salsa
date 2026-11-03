@@ -24,8 +24,26 @@
           <span *ngIf="event.attendances.length">Total members assigned: {{event.attendances.length}}</span>
           <span *ngIf="!event.attendances.length">No members assigned yet.</span>
         </div>
-        <button mat-flat-button color="accent" (click)="copyEmailList()" style="width: 150px">
-          {{ copying ? 'Copied!' : 'Copy Email List' }}
+        <button mat-flat-button
+                color="accent"
+                class="copy-button"
+                (click)="copyEmailList()"
+                [attr.aria-label]="copying ? 'Emails copied' : 'Copy email list'">
+
+          <span class="button-content-wrapper">
+            <span class="button-content" [class.hidden]="copying">
+              Email List
+              <mat-icon class="material-symbols-outlined">content_copy</mat-icon>
+            </span>
+
+            <span class="button-content success"
+                  [class.hidden]="!copying"
+                  aria-hidden="true">
+              Copied!
+              <mat-icon class="material-symbols-outlined">check</mat-icon>
+            </span>
+          </span>
+
         </button>
       </div>
     </div>
