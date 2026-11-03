@@ -58,7 +58,7 @@ export class VolunteerRosterPageComponent extends BaseComponent implements OnIni
   returnTo: string = '';
 
   emailList: string = '';
-  copied: boolean = false;
+  copying: boolean = false;
   private copyTimeout?: ReturnType<typeof setTimeout>;
 
   @ViewChild('copyTooltip') copyTooltip!: MatTooltip;
@@ -108,17 +108,17 @@ export class VolunteerRosterPageComponent extends BaseComponent implements OnIni
   copyEmailList() {
     this.clipboard.copy(this.emailList);
 
-    this.copied = true;
+    this.copying = true;
 
     // Reset the timer if the user clicks multiple times
     clearTimeout(this.copyTimeout);
 
     // Force the tooltip to appear immediately
-    setTimeout(() => this.copyTooltip.show(0), 0);
+    setTimeout(() => this.copyTooltip?.show(0), 0);
 
     this.copyTimeout = setTimeout(() => {
-      this.copyTooltip.hide(0);
-      this.copied = false;
+      this.copyTooltip?.hide(0);
+      this.copying = false;
     }, 1000);
   }
 

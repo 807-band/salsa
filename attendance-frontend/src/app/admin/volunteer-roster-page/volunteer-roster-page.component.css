@@ -41,3 +41,44 @@ a:hover {
   background-color: var(--accent-color);
   color: white;
 }
+
+.copy-button {
+  width: 150px;
+
+  .button-content-wrapper {
+    display: inline-grid;
+    place-items: center;
+    width: 100%;
+  }
+
+  .button-content {
+    grid-area: 1 / 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    white-space: nowrap;
+
+    opacity: 1;
+    transform: translateY(0);
+
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease;
+
+    &.hidden {
+      opacity: 0;
+      transform: translateY(4px);
+      pointer-events: none;
+    }
+  }
+
+  mat-icon {
+    margin: 0;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+  }
+}
