@@ -1,6 +1,5 @@
 import {Constants} from './constants';
 import {Section} from '../models/section';
-import {Term} from '../models/term';
 
 export class Utilities {
   public static getConflictColor(conflict: string): string {
@@ -75,6 +74,15 @@ export class Utilities {
     return roleOptions;
   }
 
+  public static getEventTypeOptions(): string[] {
+    let eventTypeOptions = [
+      Constants.EVENT_TYPE_REHEARSAL,
+      Constants.EVENT_TYPE_WHOLE_BAND_EVENT,
+      Constants.EVENT_TYPE_PEP_EVENT
+    ]
+    return eventTypeOptions;
+  }
+
   public static getPepBandLabel(pepBandId: string): string {
     switch (pepBandId) {
       case Constants.PEP_BAND_ID_A: return Constants.PEP_BAND_LABEL_A;
@@ -98,28 +106,4 @@ export class Utilities {
       Constants.STATION_OPTION_LEAD];
   }
 
-  // public static findCurrentOrClosestTerm(terms: Term[]) {
-  //   let closestDiff: number | null = null;
-  //   let closestTerm: Term | null = null;
-  //
-  //   let now = new Date();
-  //
-  //   let selectedTerm = null
-  //   terms.forEach(term => {
-  //     const start = new Date(term.startDate);
-  //     const end = new Date(term.endDate);
-  //
-  //     if (start <= now && end >= now) {
-  //       selectedTerm = term;
-  //     }
-  //     // Track the term with start date closest to now
-  //     const diff = Math.abs(start.getTime() - now.getTime());
-  //     if ((!closestDiff || diff < closestDiff)) {
-  //       closestDiff = diff;
-  //       closestTerm = term;
-  //     }
-  //   })
-  //   // If no current term matches, fallback to the closest start date
-  //   return selectedTerm ?? closestTerm;
-  // }
 }

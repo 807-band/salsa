@@ -81,6 +81,8 @@
 
     </div>
   </form>
+
+  <mat-divider style="width: 100%; margin-bottom: 10px;"></mat-divider>
   <app-member-attendance-table *ngIf="!editing" [attendances]="this.member?.attendances"></app-member-attendance-table>
 
   <button *ngIf="!editing"
