@@ -41,6 +41,7 @@ export class AttendanceRepository {
                     attendance: IsNull()
                 },
                 {
+                    attendance: 'Sub',
                     sub: { memberId: id }
                 }
             ],
@@ -271,9 +272,15 @@ export class AttendanceRepository {
                                     AND ((m.memberId = ea.memberId
                                             AND ea.attendance NOT LIKE '%Absent%'
                                             AND ea.attendance NOT LIKE '%Sub%')
-                                        OR (ea.subId IS NOT NULL AND m.memberId = ea.subId))
+                                        OR (ea.attendance = 'Sub' AND ea.subId IS NOT NULL AND m.memberId = ea.subId))
                                 THEN 1 END) AS extraAbcEventsAttended,
-                 COUNT(CASE WHEN ea.subId = m.memberId THEN 1 END) AS abcEventsSubbed,
+                 COUNT(CASE WHEN
+                                e.type = 'Pep Event'
+                                    AND b.bandId <> 'V'
+                                    AND ea.attendance = 'Sub' 
+                                    AND ea.required = 1
+                                    AND ea.subId = m.memberId 
+                                THEN 1 END) AS abcEventsSubbed,
                  COUNT(CASE WHEN
                                 b.bandId = 'V'
                                    AND ea.attendance IS NOT NULL
@@ -281,7 +288,7 @@ export class AttendanceRepository {
                                    AND ((m.memberId = ea.memberId
                                              AND ea.attendance NOT LIKE '%Absent%'
                                              AND ea.attendance NOT LIKE '%Sub%')
-                                        OR (ea.subId IS NOT NULL AND m.memberId = ea.subId)) 
+                                        OR (ea.attendance = 'Sub' AND ea.subId IS NOT NULL AND m.memberId = ea.subId)) 
                                    THEN 1 END) AS volunteerEventsAttended
              FROM Member m
                       LEFT JOIN User u ON m.email = u.email
