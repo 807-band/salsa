@@ -37,6 +37,11 @@ export class AttendanceRepository {
                 mbEvent: true,
                 sub: true,
                 section: true,
+            },
+            order: {
+                mbEvent: {
+                    date: 'DESC'
+                }
             }
         });
     }
