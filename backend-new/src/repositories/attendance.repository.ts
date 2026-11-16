@@ -46,7 +46,9 @@ export class AttendanceRepository {
                 }
             ],
             relations: {
-                // since we're fetching by the member id, we presumably already have the member object
+                member: {
+                    user: true
+                },
                 mbEvent: {
                     pepBand: true
                 },

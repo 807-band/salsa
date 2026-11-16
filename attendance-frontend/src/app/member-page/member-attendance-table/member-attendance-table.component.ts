@@ -130,5 +130,5 @@ export class MemberAttendanceTableComponent implements OnInit, AfterViewInit, On
   }
 
   readonly PEP_BAND_ID_VOLUNTEER = Constants.PEP_BAND_ID_VOLUNTEER;
-
+  readonly ATTENDANCE_SUB = Constants.ATTENDANCE_SUB
 }

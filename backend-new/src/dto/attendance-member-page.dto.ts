@@ -23,6 +23,15 @@ export class AttendanceMemberPageDto {
     eventDate!: Date;
 
     @Expose()
+    memberId!: number | null;
+
+    @Expose()
+    memberFirstName!: string | null;
+
+    @Expose()
+    memberLastName!: string | null;
+
+    @Expose()
     subId!: number | null;
 
     @Expose()

@@ -6,6 +6,9 @@ export interface EventAttendanceMemberPage {
   eventType: string;
   eventDate: Date;
   eventPepBandId: string | null;
+  memberId: number;
+  memberFirstName: string;
+  memberLastName: string;
   subId: number;
   subFirstName: string;
   subLastName: string;
