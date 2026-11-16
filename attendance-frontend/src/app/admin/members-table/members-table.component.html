@@ -94,12 +94,12 @@
   <form #memberForm="ngForm" (ngSubmit)="submitMember(memberForm)">
     <mat-dialog-content>
       <mat-form-field>
-        <mat-label class="form-label">Email *</mat-label>
-        <input matInput id="memberEmail" type="text" name="memberEmail" [(ngModel)]="memberEmail">
+        <mat-label class="form-label">Email</mat-label>
+        <input required matInput id="memberEmail" type="text" name="memberEmail" [(ngModel)]="memberEmail">
       </mat-form-field><br/>
       <mat-form-field>
-        <mat-label class="form-label">Section *</mat-label>
-        <mat-select id="memberSection" name="memberSection" [(ngModel)]="memberSection">
+        <mat-label class="form-label">Section</mat-label>
+        <mat-select required id="memberSection" name="memberSection" [(ngModel)]="memberSection">
           <mat-option [value]="null">--</mat-option>
           <mat-option *ngFor="let option of sectionOptions" [value]="option">{{option.name}}</mat-option>
         </mat-select>
@@ -118,11 +118,10 @@
           <mat-option *ngFor="let option of rehearsalConflictOptions" [value]="option">{{option}}</mat-option>
         </mat-select>
       </mat-form-field><br/>
-      <span>* Required</span>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="onCancelDialog()">Cancel</button>
-      <button mat-button type="submit" [disabled]="!memberEmail || !memberSection">Submit</button>
+      <button mat-button type="submit" [disabled]="memberForm.invalid">Submit</button>
     </mat-dialog-actions>
   </form>
 </ng-template>

@@ -1,5 +1,4 @@
-import {Expose, Type} from "class-transformer";
-import {PepBandDto} from "./pep-band.dto";
+import {Expose} from "class-transformer";
 
 export class AttendanceMemberPageDto {
     @Expose()
@@ -18,11 +17,19 @@ export class AttendanceMemberPageDto {
     eventType!: string;
 
     @Expose()
-    @Type(() => PepBandDto)
-    eventPepBand!: PepBandDto;
+    eventPepBandId!: string | null;
 
     @Expose()
     eventDate!: Date;
+
+    @Expose()
+    memberId!: number | null;
+
+    @Expose()
+    memberFirstName!: string | null;
+
+    @Expose()
+    memberLastName!: string | null;
 
     @Expose()
     subId!: number | null;

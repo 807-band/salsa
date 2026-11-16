@@ -30,7 +30,7 @@
 
       <td mat-cell *matCellDef="let attendance">
         {{ attendance.eventType }}
-        <span *ngIf="attendance.eventPepBand?.bandId == PEP_BAND_ID_VOLUNTEER" style="color: var(--accent-color)"> (Volunteer)</span>
+        <span *ngIf="attendance.eventPepBandId == PEP_BAND_ID_VOLUNTEER" style="color: var(--accent-color)"> (Volunteer)</span>
       </td>
     </ng-container>
 
@@ -62,7 +62,8 @@
       </th>
 
       <td mat-cell *matCellDef="let attendance">
-        {{ attendance.attendanceStatus }}
+        <span *ngIf="attendance.attendanceStatus != ATTENDANCE_SUB">{{ attendance.attendanceStatus }}</span>
+        <span *ngIf="attendance.attendanceStatus == ATTENDANCE_SUB">Subbed for {{attendance.memberFirstName}} {{attendance.memberLastName}}</span>
       </td>
     </ng-container>
 
