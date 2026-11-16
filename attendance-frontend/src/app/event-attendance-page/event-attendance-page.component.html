@@ -50,16 +50,17 @@
         <b *ngIf="!editing && eventAttendance?.attendance === 'Sub'">
           Subbed by {{eventAttendance?.sub?.user?.firstName}} {{eventAttendance?.sub?.user?.lastName}}
         </b>
-        <app-attendance-select *ngIf="editing"
-                               formControlName="attendance"
-                               [includeSub]="includeSubOption()"
-                               style="display: inline-block; font-size: 1rem; margin-left: 5px"></app-attendance-select>
+        <div *ngIf="editing" style="display: flex; flex-direction: column; gap: 5px; margin-top: 5px;">
+          <app-attendance-select formControlName="attendance"
+                                 [includeSub]="includeSubOption()"
+                                 style="display: inline-block; font-size: 1rem; margin-left: 5px"></app-attendance-select>
 
-        <app-member-select *ngIf="editing && form.get('attendance')?.value === 'Sub'"
-                           style="display: inline-block; font-size: 1rem; margin-left: 5px"
-                           formControlName="sub"
-                           [memberOptions]="sectionMembers"
-                           [forSub]="true"></app-member-select>
+          <app-member-select *ngIf="form.get('attendance')?.value === 'Sub'"
+                             style="display: inline-block; font-size: 1rem; margin-left: 5px"
+                             formControlName="sub"
+                             [memberOptions]="sectionMembers"
+                             [forSub]="true"></app-member-select>
+        </div>
       </span>
     </div>
 
