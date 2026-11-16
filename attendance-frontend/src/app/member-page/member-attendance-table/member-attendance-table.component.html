@@ -30,6 +30,7 @@
 
       <td mat-cell *matCellDef="let attendance">
         {{ attendance.eventType }}
+        <span *ngIf="attendance.eventPepBand?.bandId == PEP_BAND_ID_VOLUNTEER" style="color: var(--accent-color)"> (Volunteer)</span>
       </td>
     </ng-container>
 

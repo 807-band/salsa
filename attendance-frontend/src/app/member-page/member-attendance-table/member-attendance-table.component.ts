@@ -18,6 +18,7 @@ import {MatButton} from '@angular/material/button';
 import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
 import {MatIcon} from '@angular/material/icon';
 import {MatCheckbox} from '@angular/material/checkbox';
+import {Constants} from '../../utilities/constants';
 
 @Component({
   selector: 'app-member-attendance-table',
@@ -43,6 +44,7 @@ import {MatCheckbox} from '@angular/material/checkbox';
     MatMenu,
     MatMenuItem,
     MatCheckbox,
+    NgIf,
   ],
   templateUrl: './member-attendance-table.component.html',
   styleUrl: './member-attendance-table.component.css'
@@ -126,5 +128,7 @@ export class MemberAttendanceTableComponent implements OnInit, AfterViewInit, On
   navigateToAttendance(attendanceId: number) {
     this.router.navigate(['/attendance', attendanceId], {queryParams: {returnTo: 'member'}});
   }
+
+  readonly PEP_BAND_ID_VOLUNTEER = Constants.PEP_BAND_ID_VOLUNTEER;
 
 }
