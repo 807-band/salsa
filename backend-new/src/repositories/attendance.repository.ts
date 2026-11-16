@@ -31,12 +31,31 @@ export class AttendanceRepository {
 
     public async findByMemberId(id: number): Promise<EventAttendance[]> {
         return await this.repo.find({
-            where: { member: { memberId: id } },
+            where: [
+                {
+                    member: { memberId: id },
+                    attendance: Not('Sub')
+                },
+                {
+                    member: { memberId: id },
+                    attendance: IsNull()
+                },
+                {
+                    sub: { memberId: id }
+                }
+            ],
             relations: {
                 // since we're fetching by the member id, we presumably already have the member object
-                mbEvent: true,
+                mbEvent: {
+                    pepBand: true
+                },
                 sub: true,
                 section: true,
+            },
+            order: {
+                mbEvent: {
+                    date: 'DESC'
+                }
             }
         });
     }

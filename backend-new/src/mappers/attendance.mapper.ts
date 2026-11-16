@@ -6,6 +6,7 @@ import { toMemberDto } from './member.mapper';
 import { toSectionDto } from './section.mapper';
 import {AttendanceTermPageDto} from "../dto/attendance-term-page.dto";
 import {AttendanceMemberPageDto} from "../dto/attendance-member-page.dto";
+import {toPepBandDto} from "./pepBand.mapper";
 
 export function toEventAttendanceDto(attendance: EventAttendance): EventAttendanceDto {
     const plainObj = {
@@ -33,6 +34,7 @@ export function toAttendanceMemberPageDto(attendance: EventAttendance) : Attenda
         eventType: attendance.mbEvent.type,
         eventDate: attendance.mbEvent.date,
 
+        eventPepBand: attendance.mbEvent.pepBand ? toPepBandDto(attendance.mbEvent.pepBand) : null,
         subId: attendance.sub ? attendance.sub.memberId : null,
         subFirstName: attendance.sub ? attendance.sub.user.firstName : null,
         subLastName: attendance.sub ? attendance.sub.user.lastName : null,

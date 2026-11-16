@@ -19,6 +19,7 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import {MatDialog, MatDialogActions, MatDialogRef, MatDialogTitle} from '@angular/material/dialog';
 import {BaseComponent} from '../base-component';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+import {MatDivider} from '@angular/material/divider';
 
 @Component({
   selector: 'app-member-page',
@@ -37,6 +38,7 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
     MatDialogTitle,
     RouterLink,
     MatProgressSpinner,
+    MatDivider,
   ],
   templateUrl: './member-page.component.html',
   styleUrl: './member-page.component.css'
