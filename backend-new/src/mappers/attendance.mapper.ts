@@ -34,7 +34,7 @@ export function toAttendanceMemberPageDto(attendance: EventAttendance) : Attenda
         eventType: attendance.mbEvent.type,
         eventDate: attendance.mbEvent.date,
 
-        eventPepBand: attendance.mbEvent.pepBand ? toPepBandDto(attendance.mbEvent.pepBand) : null,
+        eventPepBandId: attendance.mbEvent.pepBand ? attendance.mbEvent.pepBand.bandId : null,
         subId: attendance.sub ? attendance.sub.memberId : null,
         subFirstName: attendance.sub ? attendance.sub.user.firstName : null,
         subLastName: attendance.sub ? attendance.sub.user.lastName : null,

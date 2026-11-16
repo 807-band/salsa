@@ -1,5 +1,3 @@
-import {PepBand} from './pep-band';
-
 export interface EventAttendanceMemberPage {
   attendanceId: number;
   attendanceStatus: string;
@@ -7,7 +5,7 @@ export interface EventAttendanceMemberPage {
   eventTitle: string;
   eventType: string;
   eventDate: Date;
-  eventPepBand: PepBand;
+  eventPepBandId: string | null;
   subId: number;
   subFirstName: string;
   subLastName: string;
