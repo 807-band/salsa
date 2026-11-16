@@ -13,11 +13,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import {EventAttendanceMemberPage} from '../../models/event-attendance-member-page';
 import {Router} from '@angular/router';
 import {Utilities} from '../../utilities/utilities';
-import {MatFormField, MatLabel} from '@angular/material/input';
-import {MatOption} from '@angular/material/core';
-import {MatSelect} from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
-import {MatDivider} from '@angular/material/divider';
+import {MatButton} from '@angular/material/button';
+import {MatMenu, MatMenuItem, MatMenuTrigger} from '@angular/material/menu';
+import {MatIcon} from '@angular/material/icon';
+import {MatCheckbox} from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-member-attendance-table',
@@ -35,12 +35,14 @@ import {MatDivider} from '@angular/material/divider';
     MatRowDef,
     MatTable,
     MatHeaderCellDef,
-    MatFormField,
-    MatLabel,
-    MatOption,
-    MatSelect,
     NgForOf,
     FormsModule,
+    MatButton,
+    MatMenuTrigger,
+    MatIcon,
+    MatMenu,
+    MatMenuItem,
+    MatCheckbox,
   ],
   templateUrl: './member-attendance-table.component.html',
   styleUrl: './member-attendance-table.component.css'
@@ -57,13 +59,30 @@ export class MemberAttendanceTableComponent implements OnInit, AfterViewInit, On
   attendanceDataSource: MatTableDataSource<EventAttendanceMemberPage> = new MatTableDataSource<EventAttendanceMemberPage>(this.attendances);
 
   eventTypeOptions: string[] = [];
-  eventTypeFilter: string | null = null;
+  attendanceStatusOptions: string[] = [];
+
+  selectedEventTypes: string[] = [];
+  selectedStatuses: string[] = [];
+
 
   constructor(private router: Router) {}
 
   ngOnInit() {
     this.attendanceDataSource.data = this.attendances ?? [];
     this.eventTypeOptions = Utilities.getEventTypeOptions();
+    this.attendanceStatusOptions = Utilities.getAttendanceOptions(true);
+
+    this.attendanceDataSource.filterPredicate = (data, filter: string) => {
+      const { types, statuses } = JSON.parse(filter);
+
+      const matchesType =
+        types.length === 0 || types.includes(data.eventType);
+
+      const matchesStatus =
+        statuses.length === 0 || statuses.includes(data.attendanceStatus);
+
+      return matchesType && matchesStatus;
+    };
   }
 
   ngAfterViewInit() {
@@ -77,15 +96,31 @@ export class MemberAttendanceTableComponent implements OnInit, AfterViewInit, On
     }
   }
 
-  updateEventTypeFilter() {
-    if (this.eventTypeFilter) {
-      this.attendanceDataSource = new MatTableDataSource(
-        this.attendances?.filter(attendance => attendance.eventType == this.eventTypeFilter)
-      )
+  toggleEventType(type: string) {
+    if (this.selectedEventTypes.includes(type)) {
+      this.selectedEventTypes = this.selectedEventTypes.filter(t => t !== type);
     } else {
-      this.attendanceDataSource = new MatTableDataSource(this.attendances);
+      this.selectedEventTypes.push(type);
     }
-    this.attendanceDataSource.paginator = this.attendancePaginator;
+
+    this.applyFilters();
+  }
+
+  toggleStatus(status: string) {
+    if (this.selectedStatuses.includes(status)) {
+      this.selectedStatuses = this.selectedStatuses.filter(s => s !== status);
+    } else {
+      this.selectedStatuses.push(status);
+    }
+
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    this.attendanceDataSource.filter = JSON.stringify({
+      types: this.selectedEventTypes,
+      statuses: this.selectedStatuses
+    });
   }
 
   navigateToAttendance(attendanceId: number) {
